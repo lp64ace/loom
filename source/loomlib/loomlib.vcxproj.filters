@@ -107,5 +107,8 @@
     <ClInclude Include="loomlib_string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="loomlib_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -36,6 +36,7 @@
     <ClInclude Include="loomlib_bitmap.h" />
     <ClInclude Include="loomlib_compiler.h" />
     <ClInclude Include="loomlib_compiler_typecheck.h" />
+    <ClInclude Include="loomlib_config.h" />
     <ClInclude Include="loomlib_endian_defines.h" />
     <ClInclude Include="loomlib_ghash.h" />
     <ClInclude Include="loomlib_hash.h" />

@@ -2,10 +2,10 @@
 
 #include "atomic/atomic_ops.h"
 
-#include "../loomlib_utildefines.h"
-#include "../loomlib_compiler.h"
-#include "../loomlib_assert.h"
-#include "../loomlib_mempool.h"
+#include "loomlib/loomlib_utildefines.h"
+#include "loomlib/loomlib_compiler.h"
+#include "loomlib/loomlib_assert.h"
+#include "loomlib/loomlib_mempool.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -154,7 +154,7 @@ static void mempool_chunk_free(MemPoolChunk *mpchunk)
 
 static void mempool_chunk_free_all(MemPoolChunk *mpchunk)
 {
-	MemPoolChunk *mpchunk_next;
+	MemPoolChunk *mpchunk_next = NULL;
 
 	for (; mpchunk; mpchunk = mpchunk_next) {
 		mpchunk_next = mpchunk->next;
@@ -222,7 +222,7 @@ void *GLU_mempool_alloc(MemPool *pool)
 
 	free_pop = pool->free;
 
-	LOOM_assert(pool->chunk_tail->next == NULL);
+	LOOM_assert ( pool->chunk_tail->next == NULL );
 
 	if (pool->flag & LOOM_MEMPOOL_ALLOW_ITER) {
 		free_pop->freeword = USEDWORD;

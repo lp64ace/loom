@@ -1,5 +1,5 @@
-#include "../loomlib_utildefines.h"
-#include "../loomlib_hash.h"
+#include "loomlib/loomlib_utildefines.h"
+#include "loomlib/loomlib_hash.h"
 
 unsigned int GLU_hash_string_u32(const char *str)
 {

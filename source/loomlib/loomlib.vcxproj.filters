@@ -39,6 +39,9 @@
     <ClCompile Include="intern\mempool.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="intern\string.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="loomlib_allocator.hh">
@@ -93,6 +96,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="loomlib_vector.hh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="loomlib_bitmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="loomlib_alloca.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="loomlib_string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

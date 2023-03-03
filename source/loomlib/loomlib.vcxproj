@@ -26,11 +26,14 @@
     <ClCompile Include="intern\listbase.cc" />
     <ClCompile Include="intern\loomlib_assert.c" />
     <ClCompile Include="intern\mempool.c" />
+    <ClCompile Include="intern\string.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="loomlib_alloca.h" />
     <ClInclude Include="loomlib_allocator.hh" />
     <ClInclude Include="loomlib_array.hh" />
     <ClInclude Include="loomlib_assert.h" />
+    <ClInclude Include="loomlib_bitmap.h" />
     <ClInclude Include="loomlib_compiler.h" />
     <ClInclude Include="loomlib_compiler_typecheck.h" />
     <ClInclude Include="loomlib_endian_defines.h" />
@@ -42,6 +45,7 @@
     <ClInclude Include="loomlib_memory_utils.hh" />
     <ClInclude Include="loomlib_mempool.h" />
     <ClInclude Include="loomlib_span.hh" />
+    <ClInclude Include="loomlib_string.h" />
     <ClInclude Include="loomlib_sys_types.h" />
     <ClInclude Include="loomlib_utildefines.h" />
     <ClInclude Include="loomlib_utildefines_variadic.h" />

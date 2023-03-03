@@ -1,4 +1,4 @@
-#include "../loomlib_hash_mm2a.h"
+#include "loomlib/loomlib_hash_mm2a.h"
 
 #define MM2A_M 0x5bd1e995
 

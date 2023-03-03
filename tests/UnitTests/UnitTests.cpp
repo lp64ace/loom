@@ -2,6 +2,7 @@
 #include "CppUnitTestAssert.h"
 
 #include "loomlib/loomlib_ghash.h"
+#include "loomlib/loomlib_string.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -54,7 +55,22 @@ public:
 		}
 
 		for ( std::map<std::string , std::string>::const_iterator itr = smap.begin ( ); itr != smap.end ( ); itr++ ) {
-			Assert::AreEqual ( ( const char * ) GLU_ghash_lookup ( shash , ( void * ) itr->first.c_str ( ) ) , itr->second.c_str ( ) );
+			const char *const key = itr->first.c_str ( );
+			const char *const val = itr->second.c_str ( );
+			Assert::AreEqual ( ( const char * ) GLU_ghash_lookup ( shash , ( void * ) key ) , val );
 		}
+	}
+
+	TEST_METHOD ( StringUnitTest_simple ) {
+		const char *sample = "This is a string that will be split in order to have a null terminator in the middle. "
+			"Trying to catch an error in GLU_strlen where a single zero byte is not accounted for.";
+
+		Assert::AreEqual ( GLU_strlen ( sample ) , strlen ( sample ) );
+		char *dup = GLU_strdup ( sample );
+		Assert::AreEqual ( GLU_strlen ( sample ) , strlen ( sample ) );
+		dup [ 48 ] = '\0';
+		Assert::AreEqual ( GLU_strlen ( sample ) , strlen ( sample ) );
+
+		MEM_freeN ( dup );
 	}
 };

@@ -1,10 +1,10 @@
 #include "guardedalloc/mem_guardedalloc.h"
 
-#include "../loomlib_utildefines.h"
-#include "../loomlib_mempool.h"
+#include "loomlib/loomlib_utildefines.h"
+#include "loomlib/loomlib_mempool.h"
 
 #define GHASH_INTERNAL_API
-#include "../loomlib_ghash.h"
+#include "loomlib/loomlib_ghash.h"
 
 #include <limits.h>
 #include <stdarg.h>
@@ -158,7 +158,7 @@ static void ghash_buckets_resize ( GHash *gh , const unsigned int nbuckets ) {
 	if ( buckets_old ) {
 		if ( nbuckets > nbuckets_old ) {
 			for ( i = 0; i < nbuckets_old; i++ ) {
-				for ( Entry *e = buckets_old [ i ] , *e_next; e; e = e_next ) {
+				for ( Entry *e = buckets_old [ i ] , *e_next = NULL; e; e = e_next ) {
 					const unsigned int hash = ghash_entryhash ( gh , e );
 					const unsigned int bucket_index = ghash_bucket_index ( gh , hash );
 					e_next = e->next;
@@ -169,7 +169,7 @@ static void ghash_buckets_resize ( GHash *gh , const unsigned int nbuckets ) {
 		} else {
 			for ( i = 0; i < nbuckets_old; i++ ) {
 			#ifdef GHASH_USE_MODULO_BUCKETS
-				for ( Entry *e = buckets_old [ i ] , *e_next; e; e = e_next ) {
+				for ( Entry *e = buckets_old [ i ] , *e_next = NULL; e; e = e_next ) {
 					const unsigned int hash = ghash_entryhash ( gh , e );
 					const unsigned int bucket_index = ghash_bucket_index ( gh , hash );
 					e_next = e->next;

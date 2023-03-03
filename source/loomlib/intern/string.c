@@ -379,7 +379,7 @@ char *GLU_sprintfN ( const char *__restrict format , ... ) {
         char *out = NULL;
 
         do {
-                out = MEM_realloc_arrayN ( out , ( alloc = alloc * ( size_t ) 2 ) * sizeof ( *out ) , __func__ );
+                out = MEM_reallocN ( out , ( alloc = alloc * ( size_t ) 2 ) * sizeof ( *out ) , __func__ );
 
                 va_start ( arg , format );
                 n = GLU_vsnprintf ( out , alloc , format , arg );

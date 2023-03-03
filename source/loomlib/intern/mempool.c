@@ -176,7 +176,7 @@ MemPool *GLU_mempool_create(size_t elem_size, size_t elem_num, size_t per_chunk,
 	}
 
 	if (flag & LOOM_MEMPOOL_ALLOW_ITER) {
-		elem_size = LOOM_MAX(elem_size, (size_t)sizeof(FreeNode));
+		elem_size = MAX2(elem_size, (size_t)sizeof(FreeNode));
 	}
 
 	pool->chunks = NULL;

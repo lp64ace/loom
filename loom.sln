@@ -25,6 +25,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "makesdna", "source\makesdna
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "atomic", "intern\atomic\atomic.vcxproj", "{7A9C72E3-DE17-4084-989C-B8CD7E670F99}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9CB88680-6371-4D0D-B704-E4CA6B84AFB4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "tests\UnitTests\UnitTests.vcxproj", "{6B37B836-C3D2-45B5-93A9-549B1D9BC788}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -65,6 +69,14 @@ Global
 		{7A9C72E3-DE17-4084-989C-B8CD7E670F99}.Release|x64.Build.0 = Release|x64
 		{7A9C72E3-DE17-4084-989C-B8CD7E670F99}.Release|x86.ActiveCfg = Release|Win32
 		{7A9C72E3-DE17-4084-989C-B8CD7E670F99}.Release|x86.Build.0 = Release|Win32
+		{6B37B836-C3D2-45B5-93A9-549B1D9BC788}.Debug|x64.ActiveCfg = Debug|x64
+		{6B37B836-C3D2-45B5-93A9-549B1D9BC788}.Debug|x64.Build.0 = Debug|x64
+		{6B37B836-C3D2-45B5-93A9-549B1D9BC788}.Debug|x86.ActiveCfg = Debug|Win32
+		{6B37B836-C3D2-45B5-93A9-549B1D9BC788}.Debug|x86.Build.0 = Debug|Win32
+		{6B37B836-C3D2-45B5-93A9-549B1D9BC788}.Release|x64.ActiveCfg = Release|x64
+		{6B37B836-C3D2-45B5-93A9-549B1D9BC788}.Release|x64.Build.0 = Release|x64
+		{6B37B836-C3D2-45B5-93A9-549B1D9BC788}.Release|x86.ActiveCfg = Release|Win32
+		{6B37B836-C3D2-45B5-93A9-549B1D9BC788}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +86,7 @@ Global
 		{07DA1EFC-AF05-4994-AB31-77D569BF9EAA} = {F6CDBEF0-9685-49F9-A850-FEF3D3F820D0}
 		{9CCF0C3F-3E59-494C-923B-87E75AB81BD2} = {F6CDBEF0-9685-49F9-A850-FEF3D3F820D0}
 		{7A9C72E3-DE17-4084-989C-B8CD7E670F99} = {9D630780-3E10-4434-8462-133811C3D0E6}
+		{6B37B836-C3D2-45B5-93A9-549B1D9BC788} = {9CB88680-6371-4D0D-B704-E4CA6B84AFB4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {008B8697-C40A-4440-8F73-E790D5A59B28}

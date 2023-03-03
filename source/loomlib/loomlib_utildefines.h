@@ -113,9 +113,8 @@
  * \{ */
 
 #if !defined(NDEBUG)
-#  define _TYPECHECK(a, b) ((void)(((typeof(a) *)0) == ((typeof(b) *)0)))
-#  define MIN2(x, y) (_TYPECHECK(x, y), (((x) < (y)) ? (x) : (y)))
-#  define MAX2(x, y) (_TYPECHECK(x, y), (((x) > (y)) ? (x) : (y)))
+#  define MIN2(x, y) (CHECK_TYPE_PAIR_INLINE(x, y), (((x) < (y)) ? (x) : (y)))
+#  define MAX2(x, y) (CHECK_TYPE_PAIR_INLINE(x, y), (((x) > (y)) ? (x) : (y)))
 #else
 #  define MIN2(x, y) (((x) < (y)) ? (x) : (y))
 #  define MAX2(x, y) (((x) > (y)) ? (x) : (y))

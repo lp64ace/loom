@@ -514,7 +514,7 @@ static GHash *ghash_copy ( const GHash *gh , GHashKeyCopyFP keycopyfp , GHashVal
 	GHash *gh_new;
 	unsigned int i;
 	/* This allows us to be sure to get the same number of buckets in gh_new as in ghash. */
-	const unsigned int reserve_nentries_new = LOOM_MAX ( GHASH_LIMIT_GROW ( gh->nbuckets ) - 1 , gh->nentries );
+	const unsigned int reserve_nentries_new = MAX2 ( GHASH_LIMIT_GROW ( gh->nbuckets ) - 1 , gh->nentries );
 
 	LOOM_assert ( !valcopyfp || !( gh->flag & GHASH_FLAG_IS_GSET ) );
 

@@ -70,11 +70,11 @@
 
 #define SWAP_TVAL(tval, a, b) \
   { \
-    CHECK_TYPE_PAIR(tval, a); \
-    CHECK_TYPE_PAIR(tval, b); \
+    CHECK_TYPE_PAIR_INLINE(tval, a); \
+    CHECK_TYPE_PAIR_INLINE(tval, b); \
     (tval) = (a); \
     (a) = (b); \
-    (b) = sw_ap; \
+    (b) = (tval); \
   } \
   (void)0
 

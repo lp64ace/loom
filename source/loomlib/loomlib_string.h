@@ -2,8 +2,11 @@
 
 #include "guardedalloc/mem_guardedalloc.h"
 
+#include "loomlib_config.h"
 #include "loomlib_utildefines.h"
 #include "loomlib_compiler.h"
+
+#include <stdarg.h>
 
 /**
  * The reason this file even exists and we are not using the builtin 
@@ -107,6 +110,82 @@ size_t GLU_strncpy_rlen ( char *__restrict dst , const char *__restrict src , co
  * \retval The number of bytes that were copied.
  */
 size_t GLU_strcpy_rlen ( char *__restrict dst , const char *__restrict src );
+
+/** \} */
+
+/* -------------------------------------------------------------------- */
+/** \name String Transform
+ * \{ */
+
+/**
+ * All instances of \a substr_old are replaced by \a substr_new, 
+ * Returns a copy of the c-string \a str into a newly #MEM_mallocN'd 
+ * and returns it.
+ * 
+ * \note A rather wasteful string-replacement utility, though this shall do for now. 
+ * Feel free to replace this with an even safe + nicer alternative.
+ * 
+ * \param str: The string to replace occurrences of substr_old in.
+ * \param substr_old: The text in the string to find and replace.
+ * \param substr_new: The string to replace the found string with.
+ * \retval Returns the duplicated string.
+ */
+char *GLU_str_replaceN ( const char *__restrict str , const char *__restrict substr_old , const char *__restrict substr_new );
+
+/**
+ * In-place replace every occurrence of \a src to \a dst in \a str.
+ * 
+ * \param std: The string to operate on.
+ * \param src: The charachter to replace.
+ * \param dst: The charachter to replace with.
+ * \retval Returns \a str.
+ */
+char *GLU_str_replace_char ( char *str , const char src , const char dst );
+
+/**
+ * In-place reverse string.
+ */
+char *GLU_str_reverse ( char *str );
+
+/**
+ * Reverses the string and stores it in a newly allocated buffer. 
+ * The buffer must be freed with #MEM_freeN.
+ * \param str The string we want to reverse.
+ * \retval The newly allocated string with the bytes of the source string in 
+ * reverse orders.
+ */
+char *GLU_str_reverseN ( const char *__restrict str );
+
+/** \} */
+
+/* -------------------------------------------------------------------- */
+/* \name Print String
+ * \{ */
+
+/** 
+ * Portable replacement for #snprintf
+ */
+size_t GLU_snprintf ( char *__restrict dst , size_t maxncpy , const char *ATTR_PRINTF_FORMAT_STRING format , ... );
+
+/** 
+ * A version of #GLU_snprintf taht returns `GLU_strlen(dst)`.
+ */
+size_t GLU_snprintf_rlen ( char *__restrict dst , size_t maxncpy , const char *ATTR_PRINTF_FORMAT_STRING format , ... );
+
+/**
+ * Portable replacement for `vsnprintf`.
+ */
+size_t GLU_vsnprintf ( char *__restrict buffer , size_t maxncpy , const char *ATTR_PRINTF_FORMAT_STRING format , va_list arg );
+
+/**
+ * A version of #GLU_vsnprintf that returns `GLU_strlen(buffer)`
+ */
+size_t GLU_vsnprintf_rlen ( char *__restrict buffer , size_t maxncpy , const char *ATTR_PRINTF_FORMAT_STRING format , va_list arg );
+
+/** 
+ * Print formatted string into a newly #MEM_mallocN'd string and return it.
+ */
+char *GLU_sprintfN ( const char *__restrict format , ... );
 
 /** \} */
 

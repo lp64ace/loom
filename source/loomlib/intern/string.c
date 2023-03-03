@@ -5,6 +5,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 char *GLU_strdupn ( const char *string , size_t len ) {
 	char *n = MEM_mallocN ( len + 1 , __func__ );
@@ -201,4 +202,189 @@ size_t GLU_strcpy_rlen ( char *__restrict dst , const char *__restrict src ) {
         size_t srclen = GLU_strlen ( src );
         memcpy ( dst , src , srclen + 1 );
         return srclen;
+}
+
+int *generate_Z_array ( const char *__restrict str , int *z ) {
+        size_t n = GLU_strlen ( str );
+
+        if ( !z ) {
+                z = MEM_malloc_arrayN ( n , sizeof ( *z ) , __func__ );
+        }
+
+        size_t l = 0 , r = 0 , k;
+
+        for ( size_t i = 1; i < n; i++ ) {
+                /** If i > r nothing matches so we will calculate 
+                * z [ i ] using the naive way. */
+                if ( i > r ) {
+                        l = r = i;
+                        while ( r < n && str [ r - l ] == str [ r ] ) {
+                                r++;
+                        }
+                        z [ i ] = r - l;
+                        r--;
+                } else {
+                        /** k = i - l so k corresponds to number which 
+                        * matches in [l,r] interval. */
+                        k = i - l;
+
+                        /** if z[k] is less than remaining interval then z[i] 
+                        * will be equal to z[k]. */
+                        if ( z [ k ] < r - i + 1 ) {
+                                z [ i ] = z [ k ];
+                        } else {
+                                l = i;
+                                while ( r < n && str [ r - l ] == str [ r ] ) {
+                                        r++;
+                                }
+                                z [ i ] = r - l;
+                                r--;
+                        }
+                }
+        }
+
+        return z;
+}
+
+char *GLU_str_replaceN ( const char *__restrict str , const char *__restrict substr_old , const char *__restrict substr_new ) {
+        const size_t oldlen = GLU_strlen ( substr_old );
+        const size_t newlen = GLU_strlen ( substr_new );
+        const size_t len = GLU_strlen ( str );
+
+        char *concat = GLU_strdupcat ( substr_old , str );
+        int *z = generate_Z_array ( concat , NULL );
+
+        const size_t maxoccur = ( len + oldlen - 1 / oldlen );
+        const size_t maxoutlen = maxoccur * MAX2 ( oldlen , newlen );
+
+        char *out = MEM_malloc_arrayN ( maxoutlen + 1 , sizeof ( *out ) , __func__ );
+        char *out_itr = out;
+
+        for ( const char *itr = concat + oldlen; *itr != '\0'; ) {
+                if ( z [ itr - concat ] >= oldlen ) {
+                        out_itr += GLU_strncpy_rlen ( out_itr , substr_new , ( size_t ) -1 );
+                        itr += oldlen;
+                } else {
+                        *out_itr = *itr;
+                        out_itr++;
+                        itr++;
+                }
+        }
+
+        *out_itr = '\0';
+
+        MEM_freeN ( concat );
+        MEM_freeN ( z );
+
+        return out;
+}
+
+char *GLU_str_reverse ( char *str ) {
+        char *itr_l = str , *itr_r = str + GLU_strlen ( str ) - 1;
+
+        char tmp;
+
+        while ( itr_l < itr_r ) {
+                SWAP_TVAL ( tmp , *itr_l , *itr_r );
+                itr_l++; itr_r--;
+        }
+
+        return str;
+}
+
+char *GLU_str_reverseN ( const char *__restrict str ) {
+        size_t len = GLU_strlen ( str );
+
+        char *out = MEM_malloc_arrayN ( len + 1 , sizeof ( *out ) , __func__ );
+        memcpy ( out , str , len + 1 );
+
+        char *itr_l = out , *itr_r = out + len - 1;
+
+        char tmp;
+
+        while ( itr_l < itr_r ) {
+                SWAP_TVAL ( tmp , *itr_l , *itr_r );
+                itr_l++; itr_r--;
+        }
+
+        return out;
+}
+
+size_t GLU_vsnprintf ( char *__restrict buffer , size_t maxncpy , const char *ATTR_PRINTF_FORMAT_STRING format , va_list arg ) {
+        size_t n;
+
+        LOOM_assert ( buffer != NULL );
+        LOOM_assert ( maxncpy > 0 );
+        LOOM_assert ( format != NULL );
+
+        n = ( size_t ) vsnprintf ( buffer , maxncpy , format , arg );
+
+        if ( n != -1 && n < maxncpy ) {
+                buffer [ n ] = '\0';
+        } else {
+                buffer [ maxncpy - 1 ] = '\0';
+        }
+
+        return n;
+}
+
+size_t GLU_vsnprintf_rlen ( char *__restrict buffer ,
+                            size_t maxncpy ,
+                            const char *__restrict format ,
+                            va_list arg ) {
+        size_t n;
+
+        LOOM_assert ( buffer != NULL );
+        LOOM_assert ( maxncpy > 0 );
+        LOOM_assert ( format != NULL );
+
+        n = ( size_t ) vsnprintf ( buffer , maxncpy , format , arg );
+
+        if ( n != -1 && n < maxncpy ) {
+                /* pass */
+        } else {
+                n = maxncpy - 1;
+        }
+        buffer [ n ] = '\0';
+
+        return n;
+}
+
+size_t GLU_snprintf ( char *__restrict dst , size_t maxncpy , const char *ATTR_PRINTF_FORMAT_STRING format , ... ) {
+        size_t n;
+        va_list arg;
+
+        va_start ( arg , format );
+        n = GLU_vsnprintf ( dst , maxncpy , format , arg );
+        va_end ( arg );
+
+        return n;
+}
+
+size_t GLU_snprintf_rlen ( char *__restrict dst , size_t maxncpy , const char *ATTR_PRINTF_FORMAT_STRING format , ... ) {
+        size_t n;
+        va_list arg;
+
+        va_start ( arg , format );
+        n = GLU_vsnprintf_rlen ( dst , maxncpy , format , arg );
+        va_end ( arg );
+
+        return n;
+}
+
+char *GLU_sprintfN ( const char *__restrict format , ... ) {
+        size_t n , alloc = DEFAULT_STRING_LEN;
+        va_list arg;
+
+        char *out = NULL;
+
+        do {
+                out = MEM_realloc_arrayN ( out , ( alloc = alloc * ( size_t ) 2 ) * sizeof ( *out ) , __func__ );
+
+                va_start ( arg , format );
+                n = GLU_vsnprintf ( out , alloc , format , arg );
+                va_end ( arg );
+        } while ( n == ( size_t ) -1 || n >= alloc );
+
+        return out;
 }

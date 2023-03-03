@@ -37,40 +37,126 @@ public:
 		Assert::IsNull ( GLU_ghash_lookup ( ghash , ( void * ) "peach" ) );
 		Assert::IsNotNull ( GLU_ghash_lookup ( ghash , ( void * ) "rose" ) );
 	}
+
 	TEST_METHOD ( GHashUnitTest_excessive ) {
-		GHash *shash = GLU_ghash_str_new ( __func__ );
+		for ( int t = 0; t < 64; t++ ) {
+			GHash *shash = GLU_ghash_str_new ( __func__ );
 
-		std::map<std::string , std::string> smap;
+			std::map<std::string , std::string> smap;
 
-		const char *selection [ ] = {
-			"random_string1" , "random_string2" , "random_string3" , "random_string4" ,
-			"specific_string1" , "specific_string2" , "specific_string3" , "specific_string4"
-		};
+			const char *selection [ ] = {
+				"random_string1" , "random_string2" , "random_string3" , "random_string4" ,
+				"specific_string1" , "specific_string2" , "specific_string3" , "specific_string4"
+			};
 
-		for ( int i = 0; i < 65536; i++ ) {
-			const char *key = selection [ rand ( ) % ARRAY_SIZE ( selection ) ];
-			const char *val = selection [ rand ( ) % ARRAY_SIZE ( selection ) ];
-			smap [ key ] = val;
-			GLU_ghash_reinsert ( shash , ( void * ) key , ( void * ) val , NULL , NULL );
-		}
+			for ( int i = 0; i < 16384; i++ ) {
+				const char *key = selection [ rand ( ) % ARRAY_SIZE ( selection ) ];
+				const char *val = selection [ rand ( ) % ARRAY_SIZE ( selection ) ];
+				smap [ key ] = val;
+				GLU_ghash_reinsert ( shash , ( void * ) key , ( void * ) val , NULL , NULL );
+			}
 
-		for ( std::map<std::string , std::string>::const_iterator itr = smap.begin ( ); itr != smap.end ( ); itr++ ) {
-			const char *const key = itr->first.c_str ( );
-			const char *const val = itr->second.c_str ( );
-			Assert::AreEqual ( ( const char * ) GLU_ghash_lookup ( shash , ( void * ) key ) , val );
+			for ( std::map<std::string , std::string>::const_iterator itr = smap.begin ( ); itr != smap.end ( ); itr++ ) {
+				const char *const key = itr->first.c_str ( );
+				const char *const val = itr->second.c_str ( );
+				Assert::AreEqual ( ( const char * ) GLU_ghash_lookup ( shash , ( void * ) key ) , val );
+			}
 		}
 	}
 
 	TEST_METHOD ( StringUnitTest_simple ) {
-		const char *sample = "This is a string that will be split in order to have a null terminator in the middle. "
-			"Trying to catch an error in GLU_strlen where a single zero byte is not accounted for.";
+		{
+			const char *sample = "This is a string that will be split in order to have a null terminator in the middle. "
+				"Trying to catch an error in GLU_strlen where a single zero byte is not accounted for.";
 
-		Assert::AreEqual ( GLU_strlen ( sample ) , strlen ( sample ) );
-		char *dup = GLU_strdup ( sample );
-		Assert::AreEqual ( GLU_strlen ( sample ) , strlen ( sample ) );
-		dup [ 48 ] = '\0';
-		Assert::AreEqual ( GLU_strlen ( sample ) , strlen ( sample ) );
+			Assert::AreEqual ( GLU_strlen ( sample ) , strlen ( sample ) );
+			char *dup = GLU_strdup ( sample );
+			Assert::AreEqual ( GLU_strlen ( sample ) , strlen ( sample ) );
+			dup [ 48 ] = '\0';
+			Assert::AreEqual ( GLU_strlen ( sample ) , strlen ( sample ) );
 
-		MEM_freeN ( dup );
+			MEM_freeN ( dup );
+		}
+
+		{
+			const char *sample = "This is a string that will be split in order to have a null terminator in the middle. "
+				"Trying to catch an error in GLU_strlen where a single zero byte is not accounted for.";
+
+			char *dup = GLU_strdup ( sample );
+
+			std::string rev_expected = sample;
+			std::reverse ( rev_expected.begin ( ) , rev_expected.end ( ) );
+			char *rev1_expected = GLU_str_reverse ( dup );
+			char *rev2_expected = GLU_str_reverseN ( sample );
+
+			Assert::AreEqual ( rev_expected.c_str ( ) , rev1_expected , "reverse in-place failed" );
+			Assert::AreEqual ( rev_expected.c_str ( ) , rev2_expected , "reverse failed" );
+
+			MEM_freeN ( rev2_expected );
+			MEM_freeN ( dup );
+		}
+
+		{
+			const char *sample = "This is a long string in which we will replace portions of it using the #GLU_str_replaceN implementing "
+				"the Z algorithm fast string search. We shall replace of occurrences of the word 'string' with the words 'byte array' and "
+				"then we shall compare the resulting string with the correct output string";
+			const char *expected = "This is a long byte array in which we will replace portions of it using the #GLU_str_replaceN implementing "
+				"the Z algorithm fast byte array search. We shall replace of occurrences of the word 'byte array' with the words 'byte array' and "
+				"then we shall compare the resulting byte array with the correct output byte array";
+
+			char *res = GLU_str_replaceN ( sample , "string" , "byte array" );
+
+			Assert::AreEqual ( expected , res );
+
+			MEM_freeN ( res );
+		}
+
+		{
+			char *res = GLU_sprintfN ( "This is a sample integer placing onto string that forces "
+						   "#GLU_sprintfN to reallocate more than the default output "
+						   "buffer length, random integers to test : %d.%d.%d" ,
+						   1 , 2 , 0 );
+
+			Assert::AreEqual ( "This is a sample integer placing onto string that forces "
+					   "#GLU_sprintfN to reallocate more than the default output "
+					   "buffer length, random integers to test : 1.2.0" , res );
+
+			MEM_freeN ( res );
+		}
+	}
+
+	TEST_METHOD ( StringUnitTest_excessive ) {
+		for ( int t = 0; t < 64; t++ ) {
+			const char *words [ ] = {
+				"random" , "words" , "to" , "choose" , "from" , "in" , "order" , "to" , "make" , "a" , "string" ,
+				"with" , "common" , "words" , "we" , "can" , "later" , "choose" , "to" , "replace"
+			};
+
+			std::string generated;
+			std::string expected;
+
+			for ( int i = 0; i < 16384; i++ ) {
+				generated.append ( words [ rand ( ) % ARRAY_SIZE ( words ) ] );
+				generated.append ( " " );
+			}
+
+			std::string str_old = words [ rand ( ) % ARRAY_SIZE ( words ) ];
+			std::string str_new = words [ rand ( ) % ARRAY_SIZE ( words ) ];
+
+			/** Brute force to find the correct and expected output from the 
+			* source generated string, and then see if it matches out optimized 
+			* approach. */
+			for ( int i = 0; i <= generated.size ( ); i++ ) {
+				if ( i + str_old.size ( ) <= generated.size ( ) && generated.substr ( i , str_old.size ( ) ) == str_old ) {
+					expected += str_new; i += str_old.size ( ) - 1;
+				} else {
+					expected += generated [ i ];
+				}
+			}
+
+			char *out = GLU_str_replaceN ( generated.c_str ( ) , str_old.c_str ( ) , str_new.c_str ( ) );
+
+			Assert::AreEqual ( expected.c_str ( ) , out );
+		}
 	}
 };

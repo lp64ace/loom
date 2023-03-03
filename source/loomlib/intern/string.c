@@ -156,4 +156,49 @@ char *GLU_strncpy ( char *__restrict dst , const char *__restrict src , size_t m
         return dst;
 }
 
+char *GLU_strncpy_ensure_pad ( char *__restrict dst , const char *__restrict src , char pad , size_t maxncpy ) {
+        LOOM_assert ( maxncpy != 0 );
 
+        if ( *src == '\0' ) {
+                *dst = '\0';
+        } else {
+                size_t index = 0;
+                size_t srclen;
+
+                if ( src [ index ] != pad ) {
+                        dst [ index++ ] = pad;
+                        maxncpy--;
+                }
+                maxncpy--;
+
+                srclen = GLU_strnlen ( src , maxncpy );
+                if ( ( src [ srclen - 1 ] != pad ) && ( srclen == maxncpy ) ) {
+                        srclen--;
+                }
+
+                memcpy ( &dst [ index ] , src , srclen );
+                index += srclen;
+
+                if ( dst [ index - 1 ] != pad ) {
+                        dst [ index++ ] = pad;
+                }
+                dst [ index ] = '\0';
+        }
+
+        return dst;
+}
+
+size_t GLU_strncpy_rlen ( char *__restrict dst , const char *__restrict src , const size_t maxncpy ) {
+        size_t srclen = GLU_strnlen ( src , maxncpy - 1 );
+        LOOM_assert ( maxncpy != 0 );
+
+        memcpy ( dst , src , srclen );
+        dst [ srclen ] = '\0';
+        return srclen;
+}
+
+size_t GLU_strcpy_rlen ( char *__restrict dst , const char *__restrict src ) {
+        size_t srclen = GLU_strlen ( src );
+        memcpy ( dst , src , srclen + 1 );
+        return srclen;
+}

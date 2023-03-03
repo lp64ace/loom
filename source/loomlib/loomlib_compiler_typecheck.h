@@ -54,7 +54,7 @@
 #  define CHECK_TYPE_INLINE(val, type) \
     (void)((void)(((type)0) != (0 ? (val) : ((type)0))), _Generic((val), type : 0, const type : 0))
 #else
-#  define CHECK_TYPE_INLINE(val, type) ((void)(((type)0) != (0 ? (val) : ((type)0))))
+#  define CHECK_TYPE_INLINE(val, type) (EXPR_NOP(val), EXPR_NOP(type))
 #endif
 
 #if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 201112L)

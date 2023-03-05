@@ -18,5 +18,8 @@
     <ClInclude Include="dna_listbase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dna_types_c.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

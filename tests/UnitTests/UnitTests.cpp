@@ -4,6 +4,8 @@
 #include "loomlib/loomlib_ghash.h"
 #include "loomlib/loomlib_string.h"
 
+#include "makesdna/dna_types_c.h"
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include <map>
@@ -161,5 +163,25 @@ public:
 
 			Assert::AreEqual ( expected.c_str ( ) , out );
 		}
+	}
+
+	TEST_METHOD ( LoomType_simple ) {
+		const unsigned int matf3x3 = LOOM_MAKETYPE ( LOOM_32F , 3 , 3 );
+		Assert::AreEqual ( 8 * sizeof ( float ) , LOOM_DEPTH_BITS ( matf3x3 ) );
+		Assert::AreEqual ( 9 , LOOM_CHANNELS ( matf3x3 ) );
+		Assert::AreEqual ( 9 * sizeof ( float ) , LOOM_SIZEOF ( matf3x3 ) );
+
+		const unsigned int mati3x3 = LOOM_MAKETYPE ( LOOM_32S , 3 , 3 );
+		Assert::AreEqual ( 8 * sizeof ( int ) , LOOM_DEPTH_BITS ( mati3x3 ) );
+		Assert::AreEqual ( 9 , LOOM_CHANNELS ( mati3x3 ) );
+		Assert::AreEqual ( 9 * sizeof ( int ) , LOOM_SIZEOF ( mati3x3 ) );
+
+		const unsigned int mats3x3 = LOOM_MAKETYPE ( LOOM_16U , 3 , 3 );
+		Assert::AreEqual ( 8 * sizeof ( unsigned short ) , LOOM_DEPTH_BITS ( mats3x3 ) );
+		Assert::AreEqual ( 9 , LOOM_CHANNELS ( mats3x3 ) );
+		Assert::AreEqual ( 9 * sizeof ( unsigned short ) , LOOM_SIZEOF ( mats3x3 ) );
+
+		Assert::AreEqual ( 8 , LOOM_MAGIC ( LOOM_MAKETYPE_EX ( LOOM_32S , 3 , 3 , 8 ) ) );
+		Assert::AreEqual ( 15 , LOOM_MAGIC ( LOOM_MAKETYPE_EX ( LOOM_32S , 3 , 3 , 15 ) ) );
 	}
 };

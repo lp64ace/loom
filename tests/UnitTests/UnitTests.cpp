@@ -154,7 +154,10 @@ public:
 				}
 			}
 
-			char *out = GLU_str_replaceN ( generated.c_str ( ) , str_old.c_str ( ) , str_new.c_str ( ) );
+			const char *in = generated.c_str ( );
+			const char *old_substr = str_old.c_str ( );
+			const char *new_substr = str_new.c_str ( );
+			char *out = GLU_str_replaceN ( in , old_substr , new_substr );
 
 			Assert::AreEqual ( expected.c_str ( ) , out );
 		}

@@ -124,6 +124,10 @@ size_t GLU_strcpy_rlen ( char *__restrict dst , const char *__restrict src );
  * 
  * \note A rather wasteful string-replacement utility, though this shall do for now. 
  * Feel free to replace this with an even safe + nicer alternative.
+ * \remark Time complexity should be O ( |str| + |substr_old| ) to detect the duplicates and 
+ * O ( |str| ) <= actual_complexity <= O ( |str| * |substr_new| / |substr_old| ) to create the 
+ * new string. It is safe to assume that the complexity will never exceed :
+ * O ( |str| * |substr_new| + |substr_old| )!
  * 
  * \param str: The string to replace occurrences of substr_old in.
  * \param substr_old: The text in the string to find and replace.

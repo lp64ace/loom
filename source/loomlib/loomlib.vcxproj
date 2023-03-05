@@ -51,6 +51,7 @@
     <ClInclude Include="loomlib_utildefines.h" />
     <ClInclude Include="loomlib_utildefines_variadic.h" />
     <ClInclude Include="loomlib_vector.hh" />
+    <ClInclude Include="loomlib_version.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

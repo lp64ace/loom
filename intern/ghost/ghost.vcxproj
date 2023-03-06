@@ -187,7 +187,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
@@ -213,7 +213,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
@@ -235,7 +235,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
@@ -261,7 +261,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>

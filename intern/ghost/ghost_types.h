@@ -32,14 +32,14 @@ typedef unsigned char uchar;
  * The 'name' argument to the macro is the name of the handle to create.
  */
 
-GHOST_DECLARE_HANDLE ( GHOST_SystemHandle );
-GHOST_DECLARE_HANDLE ( GHOST_TimerTaskHandle );
-GHOST_DECLARE_HANDLE ( GHOST_WindowHandle );
-GHOST_DECLARE_HANDLE ( GHOST_EventHandle );
-GHOST_DECLARE_HANDLE ( GHOST_RectangleHandle );
-GHOST_DECLARE_HANDLE ( GHOST_EventConsumerHandle );
-GHOST_DECLARE_HANDLE ( GHOST_ContextHandle );
-GHOST_DECLARE_HANDLE ( GHOST_XrContextHandle );
+GHOST_DECLARE_HANDLE ( GHOST_HSYSTEM );
+GHOST_DECLARE_HANDLE ( GHOST_HTTASK );
+GHOST_DECLARE_HANDLE ( GHOST_HWND );
+GHOST_DECLARE_HANDLE ( GHOST_HEVENT );
+GHOST_DECLARE_HANDLE ( GHOST_HRECT );
+GHOST_DECLARE_HANDLE ( GHOST_HEVTCONSUMER );
+GHOST_DECLARE_HANDLE ( GHOST_HCONTEXT );
+GHOST_DECLARE_HANDLE ( GHOST_HXRCONTEXT );
 
 typedef void ( *GHOST_TBacktraceFn )( void *file_handle );
 
@@ -445,15 +445,11 @@ typedef struct {
 	int32_t x;
 	/** The y-coordinate of the cursor position. */
 	int32_t y;
-	/** Associated tablet data. */
-	GHOST_TabletData tablet;
 } GHOST_TEventCursorData;
 
 typedef struct {
 	/** The mask of the mouse button. */
 	GHOST_TButton button;
-	/** Associated tablet data. */
-	GHOST_TabletData tablet;
 } GHOST_TEventButtonData;
 
 typedef struct {

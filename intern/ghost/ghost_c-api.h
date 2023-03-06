@@ -9,25 +9,25 @@ extern "C" {
 #endif
 
 	/**
-		* Definition of a callback routine that receives events.
-		* \param event: The event received.
-		* \param userdata: The callback's user data, supplied to #GHOST_CreateSystem.
-		*/
-	typedef bool ( *GHOST_EventCallbackProcPtr )( GHOST_EventHandle event , GHOST_TUserDataPtr userdata );
+	 * Definition of a callback routine that receives events.
+	 * \param event: The event received.
+	 * \param userdata: The callback's user data, supplied to #GHOST_CreateSystem.
+	 */
+	typedef bool ( *GHOST_EventCallbackProcPtr )( GHOST_HEVENT event , GHOST_TUserDataPtr userdata );
 
 	/**
-		* Creates the one and only system.
-		* \return a handle to the system.
-		*/
-	extern GHOST_SystemHandle GHOST_CreateSystem ( void );
-	extern GHOST_SystemHandle GHOST_CreateSystemBackground ( void );
+	 * Creates the one and only system.
+	 * \return a handle to the system.
+	 */
+	extern GHOST_HSYSTEM GHOST_CreateSystem ( void );
+	extern GHOST_HSYSTEM GHOST_CreateSystemBackground ( void );
 
 	/**
-		* Specifies whether debug messages are to be enabled for the specific system handle.
-		* \param systemhandle: The handle to the system.
-		* \param debug: Flag for systems to debug.
-		*/
-	extern void GHOST_SystemInitDebug ( GHOST_SystemHandle systemhandle , GHOST_Debug debug );
+	* Specifies whether debug messages are to be enabled for the specific system handle.
+	 * \param systemhandle: The handle to the system.
+	 * \param debug: Flag for systems to debug.
+	 */
+	extern void GHOST_SystemInitDebug ( GHOST_HSYSTEM systemhandle , GHOST_Debug debug );
 
 #if !(defined(WIN32) || defined(__APPLE__))
 	extern const char *GHOST_SystemBackend ( void );
@@ -38,7 +38,7 @@ extern "C" {
 	 * \param systemhandle: The handle to the system.
 	 * \return An indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_DisposeSystem ( GHOST_SystemHandle systemhandle );
+	extern GHOST_TSuccess GHOST_DisposeSystem ( GHOST_HSYSTEM systemhandle );
 
 	/**
 	 * Show a system message box to the user
@@ -50,7 +50,7 @@ extern "C" {
 	 * \param link: Optional (hyper)link to a web-page to show when pressing help.
 	 * \param dialog_options: Options to configure the message box.
 	 */
-	extern void GHOST_ShowMessageBox ( GHOST_SystemHandle systemhandle ,
+	extern void GHOST_ShowMessageBox ( GHOST_HSYSTEM systemhandle ,
 					   const char *title ,
 					   const char *message ,
 					   const char *help_label ,
@@ -63,7 +63,7 @@ extern "C" {
 	 * \param eventCallback: The event callback routine.
 	 * \param userdata: Pointer to user data returned to the callback routine.
 	 */
-	extern GHOST_EventConsumerHandle GHOST_CreateEventConsumer (
+	extern GHOST_HEVTCONSUMER GHOST_CreateEventConsumer (
 		GHOST_EventCallbackProcPtr eventCallback , GHOST_TUserDataPtr userdata );
 
 	/**
@@ -71,7 +71,7 @@ extern "C" {
 	 * \param consumerhandle: Handle to the event consumer.
 	 * \return An indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_DisposeEventConsumer ( GHOST_EventConsumerHandle consumerhandle );
+	extern GHOST_TSuccess GHOST_DisposeEventConsumer ( GHOST_HEVTCONSUMER consumerhandle );
 
 	/**
 	 * Returns the system time.
@@ -80,7 +80,7 @@ extern "C" {
 	 * \param systemhandle: The handle to the system.
 	 * \return The number of milliseconds.
 	 */
-	extern uint64_t GHOST_GetMilliSeconds ( GHOST_SystemHandle systemhandle );
+	extern uint64_t GHOST_GetMilliSeconds ( GHOST_HSYSTEM systemhandle );
 
 	/**
 	 * Installs a timer.
@@ -93,7 +93,7 @@ extern "C" {
 	 * \param userData: Placeholder for user data.
 	 * \return A timer task (0 if timer task installation failed).
 	 */
-	extern GHOST_TimerTaskHandle GHOST_InstallTimer ( GHOST_SystemHandle systemhandle ,
+	extern GHOST_HTTASK GHOST_InstallTimer ( GHOST_HSYSTEM systemhandle ,
 							  uint64_t delay ,
 							  uint64_t interval ,
 							  GHOST_TimerProcPtr timerProc ,
@@ -105,8 +105,8 @@ extern "C" {
 	 * \param timertaskhandle: Timer task to be removed.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_RemoveTimer ( GHOST_SystemHandle systemhandle ,
-						  GHOST_TimerTaskHandle timertaskhandle );
+	extern GHOST_TSuccess GHOST_RemoveTimer ( GHOST_HSYSTEM systemhandle ,
+						  GHOST_HTTASK timertaskhandle );
 
 	/***************************************************************************************
 	 * Display/window management functionality
@@ -117,7 +117,7 @@ extern "C" {
 	  * \param systemhandle: The handle to the system.
 	  * \return The number of displays.
 	  */
-	extern uint8_t GHOST_GetNumDisplays ( GHOST_SystemHandle systemhandle );
+	extern uint8_t GHOST_GetNumDisplays ( GHOST_HSYSTEM systemhandle );
 
 	/**
 	 * Returns the dimensions of the main display on this system.
@@ -125,7 +125,7 @@ extern "C" {
 	 * \param width: A pointer the width gets put in.
 	 * \param height: A pointer the height gets put in.
 	 */
-	extern void GHOST_GetMainDisplayDimensions ( GHOST_SystemHandle systemhandle ,
+	extern void GHOST_GetMainDisplayDimensions ( GHOST_HSYSTEM systemhandle ,
 						     uint32_t *width ,
 						     uint32_t *height );
 
@@ -137,7 +137,7 @@ extern "C" {
 	 * \param width: A pointer the width gets put in.
 	 * \param height: A pointer the height gets put in.
 	 */
-	extern void GHOST_GetAllDisplayDimensions ( GHOST_SystemHandle systemhandle ,
+	extern void GHOST_GetAllDisplayDimensions ( GHOST_HSYSTEM systemhandle ,
 						    uint32_t *width ,
 						    uint32_t *height );
 
@@ -158,8 +158,8 @@ extern "C" {
 	 * \param glSettings: Misc OpenGL options.
 	 * \return A handle to the new window ( == NULL if creation failed).
 	 */
-	extern GHOST_WindowHandle GHOST_CreateWindow ( GHOST_SystemHandle systemhandle ,
-						       GHOST_WindowHandle parent_windowhandle ,
+	extern GHOST_HWND GHOST_CreateWindow ( GHOST_HSYSTEM systemhandle ,
+						       GHOST_HWND parent_windowhandle ,
 						       const char *title ,
 						       int32_t left ,
 						       int32_t top ,
@@ -176,7 +176,7 @@ extern "C" {
 	 * \param glSettings: Misc OpenGL options.
 	 * \return A handle to the new context ( == NULL if creation failed).
 	 */
-	extern GHOST_ContextHandle GHOST_CreateOpenGLContext ( GHOST_SystemHandle systemhandle ,
+	extern GHOST_HCONTEXT GHOST_CreateOpenGLContext ( GHOST_HSYSTEM systemhandle ,
 							       GHOST_GLSettings glSettings );
 
 	/**
@@ -185,24 +185,24 @@ extern "C" {
 	 * \param contexthandle: Handle to the context to be disposed.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_DisposeOpenGLContext ( GHOST_SystemHandle systemhandle ,
-							   GHOST_ContextHandle contexthandle );
+	extern GHOST_TSuccess GHOST_DisposeOpenGLContext ( GHOST_HSYSTEM systemhandle ,
+							   GHOST_HCONTEXT contexthandle );
 
 	/**
 	 * Returns the window user data.
 	 * \param windowhandle: The handle to the window.
 	 * \return The window user data.
 	 */
-	extern GHOST_TUserDataPtr GHOST_GetWindowUserData ( GHOST_WindowHandle windowhandle );
+	extern GHOST_TUserDataPtr GHOST_GetWindowUserData ( GHOST_HWND windowhandle );
 
 	/**
 	 * Changes the window user data.
 	 * \param windowhandle: The handle to the window.
 	 * \param userdata: The window user data.
 	 */
-	extern void GHOST_SetWindowUserData ( GHOST_WindowHandle windowhandle , GHOST_TUserDataPtr userdata );
+	extern void GHOST_SetWindowUserData ( GHOST_HWND windowhandle , GHOST_TUserDataPtr userdata );
 
-	extern bool GHOST_IsDialogWindow ( GHOST_WindowHandle windowhandle );
+	extern bool GHOST_IsDialogWindow ( GHOST_HWND windowhandle );
 
 	/**
 	 * Dispose a window.
@@ -210,8 +210,8 @@ extern "C" {
 	 * \param windowhandle: Handle to the window to be disposed.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_DisposeWindow ( GHOST_SystemHandle systemhandle ,
-						    GHOST_WindowHandle windowhandle );
+	extern GHOST_TSuccess GHOST_DisposeWindow ( GHOST_HSYSTEM systemhandle ,
+						    GHOST_HWND windowhandle );
 
 	/**
 	 * Returns whether a window is valid.
@@ -219,7 +219,7 @@ extern "C" {
 	 * \param windowhandle: Handle to the window to be checked.
 	 * \return Indication of validity.
 	 */
-	extern bool GHOST_ValidWindow ( GHOST_SystemHandle systemhandle , GHOST_WindowHandle windowhandle );
+	extern bool GHOST_ValidWindow ( GHOST_HSYSTEM systemhandle , GHOST_HWND windowhandle );
 
 	/**
 	 * Begins full screen mode.
@@ -229,7 +229,7 @@ extern "C" {
 	 * \return A handle to the window displayed in full screen.
 	 *         This window is invalid after full screen has been ended.
 	 */
-	extern GHOST_WindowHandle GHOST_BeginFullScreen ( GHOST_SystemHandle systemhandle ,
+	extern GHOST_HWND GHOST_BeginFullScreen ( GHOST_HSYSTEM systemhandle ,
 							  GHOST_DisplaySetting *setting ,
 							  const bool stereoVisual );
 
@@ -238,14 +238,14 @@ extern "C" {
 	 * \param systemhandle: The handle to the system.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_EndFullScreen ( GHOST_SystemHandle systemhandle );
+	extern GHOST_TSuccess GHOST_EndFullScreen ( GHOST_HSYSTEM systemhandle );
 
 	/**
 	 * Returns current full screen mode status.
 	 * \param systemhandle: The handle to the system.
 	 * \return The current status.
 	 */
-	extern bool GHOST_GetFullScreen ( GHOST_SystemHandle systemhandle );
+	extern bool GHOST_GetFullScreen ( GHOST_HSYSTEM systemhandle );
 
 	/**
 	 * Get the Window under the cursor.
@@ -253,7 +253,7 @@ extern "C" {
 	 * \param y: The y-coordinate of the cursor.
 	 * \return The window under the cursor or nullptr in none.
 	 */
-	extern GHOST_WindowHandle GHOST_GetWindowUnderCursor ( GHOST_SystemHandle systemhandle ,
+	extern GHOST_HWND GHOST_GetWindowUnderCursor ( GHOST_HSYSTEM systemhandle ,
 							       int32_t x ,
 							       int32_t y );
 
@@ -268,13 +268,13 @@ extern "C" {
 	  * wait (block) until the next event before returning.
 	  * \return Indication of the presence of events.
 	  */
-	extern bool GHOST_ProcessEvents ( GHOST_SystemHandle systemhandle , bool waitForEvent );
+	extern bool GHOST_ProcessEvents ( GHOST_HSYSTEM systemhandle , bool waitForEvent );
 
 	/**
 	 * Retrieves events from the queue and send them to the event consumers.
 	 * \param systemhandle: The handle to the system.
 	 */
-	extern void GHOST_DispatchEvents ( GHOST_SystemHandle systemhandle );
+	extern void GHOST_DispatchEvents ( GHOST_HSYSTEM systemhandle );
 
 	/**
 	 * Adds the given event consumer to our list.
@@ -282,8 +282,8 @@ extern "C" {
 	 * \param consumerhandle: The event consumer to add.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_AddEventConsumer ( GHOST_SystemHandle systemhandle ,
-						       GHOST_EventConsumerHandle consumerhandle );
+	extern GHOST_TSuccess GHOST_AddEventConsumer ( GHOST_HSYSTEM systemhandle ,
+						       GHOST_HEVTCONSUMER consumerhandle );
 
 	/**
 	 * Remove the given event consumer to our list.
@@ -291,8 +291,8 @@ extern "C" {
 	 * \param consumerhandle: The event consumer to remove.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_RemoveEventConsumer ( GHOST_SystemHandle systemhandle ,
-							  GHOST_EventConsumerHandle consumerhandle );
+	extern GHOST_TSuccess GHOST_RemoveEventConsumer ( GHOST_HSYSTEM systemhandle ,
+							  GHOST_HEVTCONSUMER consumerhandle );
 
 	/***************************************************************************************
 	 * Progress bar functionality
@@ -303,13 +303,13 @@ extern "C" {
 	  * \param windowhandle: The handle to the window.
 	  * \param progress: The progress percentage (0.0 to 1.0).
 	  */
-	extern GHOST_TSuccess GHOST_SetProgressBar ( GHOST_WindowHandle windowhandle , float progress );
+	extern GHOST_TSuccess GHOST_SetProgressBar ( GHOST_HWND windowhandle , float progress );
 
 	/**
 	 * Hides the progress bar in the icon
 	 * \param windowhandle: The handle to the window.
 	 */
-	extern GHOST_TSuccess GHOST_EndProgressBar ( GHOST_WindowHandle windowhandle );
+	extern GHOST_TSuccess GHOST_EndProgressBar ( GHOST_HWND windowhandle );
 
 	/***************************************************************************************
 	 * Cursor management functionality
@@ -320,7 +320,7 @@ extern "C" {
 	  * \param windowhandle: The handle to the window.
 	  * \return The current cursor shape.
 	  */
-	extern GHOST_TStandardCursor GHOST_GetCursorShape ( GHOST_WindowHandle windowhandle );
+	extern GHOST_TStandardCursor GHOST_GetCursorShape ( GHOST_HWND windowhandle );
 
 	/**
 	 * Set the shape of the cursor. If the shape is not supported by the platform,
@@ -329,14 +329,14 @@ extern "C" {
 	 * \param cursorshape: The new cursor shape type id.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_SetCursorShape ( GHOST_WindowHandle windowhandle ,
+	extern GHOST_TSuccess GHOST_SetCursorShape ( GHOST_HWND windowhandle ,
 						     GHOST_TStandardCursor cursorshape );
 
 	/**
 	 * Test if the standard cursor shape is supported by current platform.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_HasCursorShape ( GHOST_WindowHandle windowhandle ,
+	extern GHOST_TSuccess GHOST_HasCursorShape ( GHOST_HWND windowhandle ,
 						     GHOST_TStandardCursor cursorshape );
 
 	/**
@@ -351,7 +351,7 @@ extern "C" {
 	 * \param canInvertColor: Let macOS invert cursor color to match platform convention.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_SetCustomCursorShape ( GHOST_WindowHandle windowhandle ,
+	extern GHOST_TSuccess GHOST_SetCustomCursorShape ( GHOST_HWND windowhandle ,
 							   uint8_t *bitmap ,
 							   uint8_t *mask ,
 							   int sizex ,
@@ -360,7 +360,7 @@ extern "C" {
 							   int hotY ,
 							   bool canInvertColor );
 
-	extern GHOST_TSuccess GHOST_GetCursorBitmap ( GHOST_WindowHandle windowhandle ,
+	extern GHOST_TSuccess GHOST_GetCursorBitmap ( GHOST_HWND windowhandle ,
 						      GHOST_CursorBitmapRef *bitmap );
 
 	/**
@@ -368,7 +368,7 @@ extern "C" {
 	 * \param windowhandle: The handle to the window.
 	 * \return The visibility state of the cursor.
 	 */
-	extern bool GHOST_GetCursorVisibility ( GHOST_WindowHandle windowhandle );
+	extern bool GHOST_GetCursorVisibility ( GHOST_HWND windowhandle );
 
 	/**
 	 * Shows or hides the cursor.
@@ -376,7 +376,7 @@ extern "C" {
 	 * \param visible: The new visibility state of the cursor.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_SetCursorVisibility ( GHOST_WindowHandle windowhandle , bool visible );
+	extern GHOST_TSuccess GHOST_SetCursorVisibility ( GHOST_HWND windowhandle , bool visible );
 
 	/**
 	 * Returns the current location of the cursor (location in client relative coordinates)
@@ -385,8 +385,8 @@ extern "C" {
 	 * \param y: The y-coordinate of the cursor.
 	 * \return Indication of success.
 	 */
-	GHOST_TSuccess GHOST_GetCursorPosition ( const GHOST_SystemHandle systemhandle ,
-						 const GHOST_WindowHandle windowhandle ,
+	GHOST_TSuccess GHOST_GetCursorPosition ( const GHOST_HSYSTEM systemhandle ,
+						 const GHOST_HWND windowhandle ,
 						 int32_t *x ,
 						 int32_t *y );
 	/**
@@ -397,12 +397,12 @@ extern "C" {
 	 * \param y: The y-coordinate of the cursor.
 	 * \return Indication of success.
 	 */
-	GHOST_TSuccess GHOST_SetCursorPosition ( GHOST_SystemHandle systemhandle ,
-						 GHOST_WindowHandle windowhandle ,
+	GHOST_TSuccess GHOST_SetCursorPosition ( GHOST_HSYSTEM systemhandle ,
+						 GHOST_HWND windowhandle ,
 						 int32_t x ,
 						 int32_t y );
 
-	void GHOST_GetCursorGrabState ( GHOST_WindowHandle windowhandle ,
+	void GHOST_GetCursorGrabState ( GHOST_HWND windowhandle ,
 					GHOST_TGrabCursorMode *r_mode ,
 					GHOST_TAxisFlag *r_axis_flag ,
 					int r_bounds [ 4 ] ,
@@ -418,7 +418,7 @@ extern "C" {
 	 * \param mouse_ungrab_xy: XY for new mouse location (optional).
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_SetCursorGrab ( GHOST_WindowHandle windowhandle ,
+	extern GHOST_TSuccess GHOST_SetCursorGrab ( GHOST_HWND windowhandle ,
 						    GHOST_TGrabCursorMode mode ,
 						    GHOST_TAxisFlag wrap_axis ,
 						    int bounds [ 4 ] ,
@@ -435,7 +435,7 @@ extern "C" {
 	  * \param isDown: Pointer to return modifier state in.
 	  * \return Indication of success.
 	  */
-	extern GHOST_TSuccess GHOST_GetModifierKeyState ( GHOST_SystemHandle systemhandle ,
+	extern GHOST_TSuccess GHOST_GetModifierKeyState ( GHOST_HSYSTEM systemhandle ,
 							  GHOST_TModifierKey mask ,
 							  bool *r_is_down );
 
@@ -446,7 +446,7 @@ extern "C" {
 	 * \param isDown: Pointer to return button state in.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_GetButtonState ( GHOST_SystemHandle systemhandle ,
+	extern GHOST_TSuccess GHOST_GetButtonState ( GHOST_HSYSTEM systemhandle ,
 						     GHOST_TButton mask ,
 						     bool *r_is_down );
 
@@ -469,21 +469,21 @@ extern "C" {
 	 /**
 	  * Tells if the ongoing drag'n'drop object can be accepted upon mouse drop
 	  */
-	extern void GHOST_setAcceptDragOperation ( GHOST_WindowHandle windowhandle , bool can_accept );
+	extern void GHOST_SetAcceptDragOperation ( GHOST_HWND windowhandle , bool can_accept );
 
 	/**
 	 * Returns the event type.
 	 * \param eventhandle: The handle to the event.
 	 * \return The event type.
 	 */
-	extern GHOST_TEventType GHOST_GetEventType ( GHOST_EventHandle eventhandle );
+	extern GHOST_TEventType GHOST_GetEventType ( GHOST_HEVENT eventhandle );
 
 	/**
 	 * Returns the time this event was generated.
 	 * \param eventhandle: The handle to the event.
 	 * \return The event generation time.
 	 */
-	extern uint64_t GHOST_GetEventTime ( GHOST_EventHandle eventhandle );
+	extern uint64_t GHOST_GetEventTime ( GHOST_HEVENT eventhandle );
 
 	/**
 	 * Returns the window this event was generated on,
@@ -491,28 +491,28 @@ extern "C" {
 	 * \param eventhandle: The handle to the event.
 	 * \return The generating window.
 	 */
-	extern GHOST_WindowHandle GHOST_GetEventWindow ( GHOST_EventHandle eventhandle );
+	extern GHOST_HWND GHOST_GetEventWindow ( GHOST_HEVENT eventhandle );
 
 	/**
 	 * Returns the event data.
 	 * \param eventhandle: The handle to the event.
 	 * \return The event data.
 	 */
-	extern GHOST_TEventDataPtr GHOST_GetEventData ( GHOST_EventHandle eventhandle );
+	extern GHOST_TEventDataPtr GHOST_GetEventData ( GHOST_HEVENT eventhandle );
 
 	/**
 	 * Returns the timer callback.
 	 * \param timertaskhandle: The handle to the timer-task.
 	 * \return The timer callback.
 	 */
-	extern GHOST_TimerProcPtr GHOST_GetTimerProc ( GHOST_TimerTaskHandle timertaskhandle );
+	extern GHOST_TimerProcPtr GHOST_GetTimerProc ( GHOST_HTTASK timertaskhandle );
 
 	/**
 	 * Changes the timer callback.
 	 * \param timertaskhandle: The handle to the timer-task.
 	 * \param timerProc: The timer callback.
 	 */
-	extern void GHOST_SetTimerProc ( GHOST_TimerTaskHandle timertaskhandle ,
+	extern void GHOST_SetTimerProc ( GHOST_HTTASK timertaskhandle ,
 					 GHOST_TimerProcPtr timerProc );
 
 	/**
@@ -520,14 +520,14 @@ extern "C" {
 	 * \param timertaskhandle: The handle to the timer-task.
 	 * \return The timer user data.
 	 */
-	extern GHOST_TUserDataPtr GHOST_GetTimerTaskUserData ( GHOST_TimerTaskHandle timertaskhandle );
+	extern GHOST_TUserDataPtr GHOST_GetTimerTaskUserData ( GHOST_HTTASK timertaskhandle );
 
 	/**
 	 * Changes the time user data.
 	 * \param timertaskhandle: The handle to the timer-task.
 	 * \param userdata: The timer user data.
 	 */
-	extern void GHOST_SetTimerTaskUserData ( GHOST_TimerTaskHandle timertaskhandle ,
+	extern void GHOST_SetTimerTaskUserData ( GHOST_HTTASK timertaskhandle ,
 						 GHOST_TUserDataPtr userdata );
 
 	/**
@@ -535,14 +535,14 @@ extern "C" {
 	 * \param windowhandle: The handle to the window.
 	 * \return The validity of the window.
 	 */
-	extern bool GHOST_GetValid ( GHOST_WindowHandle windowhandle );
+	extern bool GHOST_GetValid ( GHOST_HWND windowhandle );
 
 	/**
 	 * Returns the type of drawing context used in this window.
 	 * \param windowhandle: The handle to the window.
 	 * \return The current type of drawing context.
 	 */
-	extern GHOST_TDrawingContextType GHOST_GetDrawingContextType ( GHOST_WindowHandle windowhandle );
+	extern GHOST_TDrawingContextType GHOST_GetDrawingContextType ( GHOST_HWND windowhandle );
 
 	/**
 	 * Tries to install a rendering context in this window.
@@ -550,7 +550,7 @@ extern "C" {
 	 * \param type: The type of rendering context installed.
 	 * \return Indication as to whether installation has succeeded.
 	 */
-	extern GHOST_TSuccess GHOST_SetDrawingContextType ( GHOST_WindowHandle windowhandle ,
+	extern GHOST_TSuccess GHOST_SetDrawingContextType ( GHOST_HWND windowhandle ,
 							    GHOST_TDrawingContextType type );
 
 	/**
@@ -558,14 +558,14 @@ extern "C" {
 	 * \param windowhandle: The handle to the window.
 	 * \return The window drawing context.
 	 */
-	extern GHOST_ContextHandle GHOST_GetDrawingContext ( GHOST_WindowHandle windowhandle );
+	extern GHOST_HCONTEXT GHOST_GetDrawingContext ( GHOST_HWND windowhandle );
 
 	/**
 	 * Sets the title displayed in the title bar.
 	 * \param windowhandle: The handle to the window.
 	 * \param title: The title to display in the title bar.
 	 */
-	extern void GHOST_SetTitle ( GHOST_WindowHandle windowhandle , const char *title );
+	extern void GHOST_SetTitle ( GHOST_HWND windowhandle , const char *title );
 
 	/**
 	 * Returns the title displayed in the title bar. The title
@@ -574,7 +574,7 @@ extern "C" {
 	 * \param windowhandle: The handle to the window.
 	 * \return The title, free with free().
 	 */
-	extern char *GHOST_GetTitle ( GHOST_WindowHandle windowhandle );
+	extern char *GHOST_GetTitle ( GHOST_HWND windowhandle );
 
 	/**
 	 * Returns the window rectangle dimensions.
@@ -582,7 +582,7 @@ extern "C" {
 	 * \param windowhandle: The handle to the window.
 	 * \return A handle to the bounding rectangle of the window.
 	 */
-	extern GHOST_RectangleHandle GHOST_GetWindowBounds ( GHOST_WindowHandle windowhandle );
+	extern GHOST_HRECT GHOST_GetWindowBounds ( GHOST_HWND windowhandle );
 
 	/**
 	 * Returns the client rectangle dimensions.
@@ -590,13 +590,13 @@ extern "C" {
 	 * \param windowhandle: The handle to the window.
 	 * \return A handle to the bounding rectangle of the window.
 	 */
-	extern GHOST_RectangleHandle GHOST_GetClientBounds ( GHOST_WindowHandle windowhandle );
+	extern GHOST_HRECT GHOST_GetClientBounds ( GHOST_HWND windowhandle );
 
 	/**
 	 * Disposes a rectangle object.
 	 * \param rectanglehandle: Handle to the rectangle.
 	 */
-	void GHOST_DisposeRectangle ( GHOST_RectangleHandle rectanglehandle );
+	void GHOST_DisposeRectangle ( GHOST_HRECT rectanglehandle );
 
 	/**
 	 * Resizes client rectangle width.
@@ -604,7 +604,7 @@ extern "C" {
 	 * \param width: The new width of the client area of the window.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_SetClientWidth ( GHOST_WindowHandle windowhandle , uint32_t width );
+	extern GHOST_TSuccess GHOST_SetClientWidth ( GHOST_HWND windowhandle , uint32_t width );
 
 	/**
 	 * Resizes client rectangle height.
@@ -612,7 +612,7 @@ extern "C" {
 	 * \param height: The new height of the client area of the window.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_SetClientHeight ( GHOST_WindowHandle windowhandle , uint32_t height );
+	extern GHOST_TSuccess GHOST_SetClientHeight ( GHOST_HWND windowhandle , uint32_t height );
 
 	/**
 	 * Resizes client rectangle.
@@ -621,7 +621,7 @@ extern "C" {
 	 * \param height: The new height of the client area of the window.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_SetClientSize ( GHOST_WindowHandle windowhandle ,
+	extern GHOST_TSuccess GHOST_SetClientSize ( GHOST_HWND windowhandle ,
 						    uint32_t width ,
 						    uint32_t height );
 
@@ -634,7 +634,7 @@ extern "C" {
 	 * \param outY: The y-coordinate in the client rectangle.
 	 */
 	extern void GHOST_ScreenToClient (
-		GHOST_WindowHandle windowhandle , int32_t inX , int32_t inY , int32_t *outX , int32_t *outY );
+		GHOST_HWND windowhandle , int32_t inX , int32_t inY , int32_t *outX , int32_t *outY );
 
 	/**
 	 * Converts a point in client rectangle coordinates to screen coordinates.
@@ -645,14 +645,14 @@ extern "C" {
 	 * \param outY: The y-coordinate on the screen.
 	 */
 	extern void GHOST_ClientToScreen (
-		GHOST_WindowHandle windowhandle , int32_t inX , int32_t inY , int32_t *outX , int32_t *outY );
+		GHOST_HWND windowhandle , int32_t inX , int32_t inY , int32_t *outX , int32_t *outY );
 
 	/**
 	 * Returns the state of the window (normal, minimized, maximized).
 	 * \param windowhandle: The handle to the window.
 	 * \return The state of the window.
 	 */
-	extern GHOST_TWindowState GHOST_GetWindowState ( GHOST_WindowHandle windowhandle );
+	extern GHOST_TWindowState GHOST_GetWindowState ( GHOST_HWND windowhandle );
 
 	/**
 	 * Sets the state of the window (normal, minimized, maximized).
@@ -660,7 +660,7 @@ extern "C" {
 	 * \param state: The state of the window.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_SetWindowState ( GHOST_WindowHandle windowhandle ,
+	extern GHOST_TSuccess GHOST_SetWindowState ( GHOST_HWND windowhandle ,
 						     GHOST_TWindowState state );
 
 	/**
@@ -669,7 +669,7 @@ extern "C" {
 	 * \param isUnsavedChanges: Unsaved changes or not.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_SetWindowModifiedState ( GHOST_WindowHandle windowhandle ,
+	extern GHOST_TSuccess GHOST_SetWindowModifiedState ( GHOST_HWND windowhandle ,
 							     bool isUnsavedChanges );
 
 	/**
@@ -678,7 +678,7 @@ extern "C" {
 	 * \param order: The order of the window.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_SetWindowOrder ( GHOST_WindowHandle windowhandle ,
+	extern GHOST_TSuccess GHOST_SetWindowOrder ( GHOST_HWND windowhandle ,
 						     GHOST_TWindowOrder order );
 
 	/**
@@ -686,14 +686,14 @@ extern "C" {
 	 * \param windowhandle: The handle to the window.
 	 * \return A success indicator.
 	 */
-	extern GHOST_TSuccess GHOST_SwapWindowBuffers ( GHOST_WindowHandle windowhandle );
+	extern GHOST_TSuccess GHOST_SwapWindowBuffers ( GHOST_HWND windowhandle );
 
 	/**
 	 * Sets the swap interval for #swapBuffers.
 	 * \param interval: The swap interval to use.
 	 * \return A boolean success indicator.
 	 */
-	extern GHOST_TSuccess GHOST_SetSwapInterval ( GHOST_WindowHandle windowhandle , int interval );
+	extern GHOST_TSuccess GHOST_SetSwapInterval ( GHOST_HWND windowhandle , int interval );
 
 	/**
 	 * Gets the current swap interval for #swapBuffers.
@@ -702,73 +702,73 @@ extern "C" {
 	 * (left untouched if there is an error)
 	 * \return A boolean success indicator of if swap interval was successfully read.
 	 */
-	extern GHOST_TSuccess GHOST_GetSwapInterval ( GHOST_WindowHandle windowhandle , int *intervalOut );
+	extern GHOST_TSuccess GHOST_GetSwapInterval ( GHOST_HWND windowhandle , int *intervalOut );
 
 	/**
 	 * Activates the drawing context of this window.
 	 * \param windowhandle: The handle to the window.
 	 * \return A success indicator.
 	 */
-	extern GHOST_TSuccess GHOST_ActivateWindowDrawingContext ( GHOST_WindowHandle windowhandle );
+	extern GHOST_TSuccess GHOST_ActivateWindowDrawingContext ( GHOST_HWND windowhandle );
 
 	/**
 	 * Invalidates the contents of this window.
 	 * \param windowhandle: The handle to the window.
 	 * \return Indication of success.
 	 */
-	extern GHOST_TSuccess GHOST_InvalidateWindow ( GHOST_WindowHandle windowhandle );
+	extern GHOST_TSuccess GHOST_InvalidateWindow ( GHOST_HWND windowhandle );
 
 	/**
 	 * Activates the drawing context of this context.
 	 * \param contexthandle: The handle to the context.
 	 * \return A success indicator.
 	 */
-	extern GHOST_TSuccess GHOST_ActivateOpenGLContext ( GHOST_ContextHandle contexthandle );
+	extern GHOST_TSuccess GHOST_ActivateOpenGLContext ( GHOST_HCONTEXT contexthandle );
 
 	/**
 	 * Release the drawing context bound to this thread.
 	 * \param contexthandle: The handle to the context.
 	 * \return A success indicator.
 	 */
-	extern GHOST_TSuccess GHOST_ReleaseOpenGLContext ( GHOST_ContextHandle contexthandle );
+	extern GHOST_TSuccess GHOST_ReleaseOpenGLContext ( GHOST_HCONTEXT contexthandle );
 
 	/**
 	 * Get the OpenGL frame-buffer handle that serves as a default frame-buffer.
 	 */
-	extern unsigned int GHOST_GetContextDefaultOpenGLFramebuffer ( GHOST_ContextHandle contexthandle );
+	extern unsigned int GHOST_GetContextDefaultOpenGLFramebuffer ( GHOST_HCONTEXT contexthandle );
 
 	/**
 	 * Get the OpenGL frame-buffer handle that serves as a default frame-buffer.
 	 */
-	extern unsigned int GHOST_GetDefaultOpenGLFramebuffer ( GHOST_WindowHandle windowhandle );
+	extern unsigned int GHOST_GetDefaultOpenGLFramebuffer ( GHOST_HWND windowhandle );
 
 	/**
 	 * Use multi-touch gestures if supported.
 	 * \param systemhandle: The handle to the system.
 	 * \param use: Enable or disable.
 	 */
-	extern void GHOST_SetMultitouchGestures ( GHOST_SystemHandle systemhandle , const bool use );
+	extern void GHOST_SetMultitouchGestures ( GHOST_HSYSTEM systemhandle , const bool use );
 
 	/**
 	 * Set which tablet API to use. Only affects Windows, other platforms have a single API.
 	 * \param systemhandle: The handle to the system.
 	 * \param api: Enum indicating which API to use.
 	 */
-	extern void GHOST_SetTabletAPI ( GHOST_SystemHandle systemhandle , GHOST_TTabletAPI api );
+	extern void GHOST_SetTabletAPI ( GHOST_HSYSTEM systemhandle , GHOST_TTabletAPI api );
 
 	/**
 	 * Access to rectangle width.
 	 * \param rectanglehandle: The handle to the rectangle.
 	 * \return width of the rectangle
 	 */
-	extern int32_t GHOST_GetWidthRectangle ( GHOST_RectangleHandle rectanglehandle );
+	extern int32_t GHOST_GetWidthRectangle ( GHOST_HRECT rectanglehandle );
 
 	/**
 	 * Access to rectangle height.
 	 * \param rectanglehandle: The handle to the rectangle.
 	 * \return height of the rectangle
 	 */
-	extern int32_t GHOST_GetHeightRectangle ( GHOST_RectangleHandle rectanglehandle );
+	extern int32_t GHOST_GetHeightRectangle ( GHOST_HRECT rectanglehandle );
 
 	/**
 	 * Gets all members of the rectangle.
@@ -779,7 +779,7 @@ extern "C" {
 	 * \param b: Pointer to return bottom coordinate in.
 	 */
 	extern void GHOST_GetRectangle (
-		GHOST_RectangleHandle rectanglehandle , int32_t *l , int32_t *t , int32_t *r , int32_t *b );
+		GHOST_HRECT rectanglehandle , int32_t *l , int32_t *t , int32_t *r , int32_t *b );
 
 	/**
 	 * Sets all members of the rectangle.
@@ -790,7 +790,7 @@ extern "C" {
 	 * \param b: requested bottom coordinate of the rectangle.
 	 */
 	extern void GHOST_SetRectangle (
-		GHOST_RectangleHandle rectanglehandle , int32_t l , int32_t t , int32_t r , int32_t b );
+		GHOST_HRECT rectanglehandle , int32_t l , int32_t t , int32_t r , int32_t b );
 
 	/**
 	 * Returns whether this rectangle is empty.
@@ -798,7 +798,7 @@ extern "C" {
 	 * \param rectanglehandle: The handle to the rectangle.
 	 * \return Success value (true == empty rectangle)
 	 */
-	extern GHOST_TSuccess GHOST_IsEmptyRectangle ( GHOST_RectangleHandle rectanglehandle );
+	extern GHOST_TSuccess GHOST_IsEmptyRectangle ( GHOST_HRECT rectanglehandle );
 
 	/**
 	 * Returns whether this rectangle is valid.
@@ -807,7 +807,7 @@ extern "C" {
 	 * \param rectanglehandle: The handle to the rectangle.
 	 * \return Success value (true == valid rectangle)
 	 */
-	extern GHOST_TSuccess GHOST_IsValidRectangle ( GHOST_RectangleHandle rectanglehandle );
+	extern GHOST_TSuccess GHOST_IsValidRectangle ( GHOST_HRECT rectanglehandle );
 
 	/**
 	 * Grows (or shrinks the rectangle).
@@ -815,7 +815,7 @@ extern "C" {
 	 * \param rectanglehandle: The handle to the rectangle.
 	 * \param i: The amount of offset given to each extreme (negative values shrink the rectangle).
 	 */
-	extern void GHOST_InsetRectangle ( GHOST_RectangleHandle rectanglehandle , int32_t i );
+	extern void GHOST_InsetRectangle ( GHOST_HRECT rectanglehandle , int32_t i );
 
 	/**
 	 * Does a union of the rectangle given and this rectangle.
@@ -823,8 +823,8 @@ extern "C" {
 	 * \param rectanglehandle: The handle to the rectangle.
 	 * \param anotherrectanglehandle: The rectangle that is input for the union operation.
 	 */
-	extern void GHOST_UnionRectangle ( GHOST_RectangleHandle rectanglehandle ,
-					   GHOST_RectangleHandle anotherrectanglehandle );
+	extern void GHOST_UnionRectangle ( GHOST_HRECT rectanglehandle ,
+					   GHOST_HRECT anotherrectanglehandle );
 
 	/**
 	 * Grows the rectangle to included a point.
@@ -832,7 +832,7 @@ extern "C" {
 	 * \param x: The x-coordinate of the point.
 	 * \param y: The y-coordinate of the point.
 	 */
-	extern void GHOST_UnionPointRectangle ( GHOST_RectangleHandle rectanglehandle , int32_t x , int32_t y );
+	extern void GHOST_UnionPointRectangle ( GHOST_HRECT rectanglehandle , int32_t x , int32_t y );
 
 	/**
 	 * Returns whether the point is inside this rectangle.
@@ -842,7 +842,7 @@ extern "C" {
 	 * \param y: y-coordinate of point to test.
 	 * \return Success value (true if point is inside).
 	 */
-	extern GHOST_TSuccess GHOST_IsInsideRectangle ( GHOST_RectangleHandle rectanglehandle ,
+	extern GHOST_TSuccess GHOST_IsInsideRectangle ( GHOST_HRECT rectanglehandle ,
 							int32_t x ,
 							int32_t y );
 
@@ -853,7 +853,7 @@ extern "C" {
 	 * \return visibility (not, partially or fully visible).
 	 */
 	extern GHOST_TVisibility GHOST_GetRectangleVisibility (
-		GHOST_RectangleHandle rectanglehandle , GHOST_RectangleHandle anotherrectanglehandle );
+		GHOST_HRECT rectanglehandle , GHOST_HRECT anotherrectanglehandle );
 
 	/**
 	 * Sets rectangle members.
@@ -862,7 +862,7 @@ extern "C" {
 	 * \param cx: Requested center x-coordinate of the rectangle.
 	 * \param cy: Requested center y-coordinate of the rectangle.
 	 */
-	extern void GHOST_SetCenterRectangle ( GHOST_RectangleHandle rectanglehandle ,
+	extern void GHOST_SetCenterRectangle ( GHOST_HRECT rectanglehandle ,
 					       int32_t cx ,
 					       int32_t cy );
 
@@ -877,7 +877,7 @@ extern "C" {
 	 * \param h: requested height of the rectangle.
 	 */
 	extern void GHOST_SetRectangleCenter (
-		GHOST_RectangleHandle rectanglehandle , int32_t cx , int32_t cy , int32_t w , int32_t h );
+		GHOST_HRECT rectanglehandle , int32_t cx , int32_t cy , int32_t w , int32_t h );
 
 	/**
 	 * Clips a rectangle.
@@ -887,8 +887,8 @@ extern "C" {
 	 * \param anotherrectanglehandle: The rectangle to clip.
 	 * \return Whether clipping has occurred
 	 */
-	extern GHOST_TSuccess GHOST_ClipRectangle ( GHOST_RectangleHandle rectanglehandle ,
-						    GHOST_RectangleHandle anotherrectanglehandle );
+	extern GHOST_TSuccess GHOST_ClipRectangle ( GHOST_HRECT rectanglehandle ,
+						    GHOST_HRECT anotherrectanglehandle );
 
 	/**
 	 * Return the data from the clipboard
@@ -939,12 +939,12 @@ extern "C" {
 	/**
 	 * If window was opened using native pixel size, it returns scaling factor.
 	 */
-	extern float GHOST_GetNativePixelSize ( GHOST_WindowHandle windowhandle );
+	extern float GHOST_GetNativePixelSize ( GHOST_HWND windowhandle );
 
 	/**
 	 * Returns the suggested DPI for this window.
 	 */
-	extern uint16_t GHOST_GetDPIHint ( GHOST_WindowHandle windowhandle );
+	extern uint16_t GHOST_GetDPIHint ( GHOST_HWND windowhandle );
 
 	/**
 	 * Enable IME attached to the given window, i.e. allows user-input
@@ -959,13 +959,13 @@ extern "C" {
 	 * - false: Move the IME windows to the given position without finishing it.
 	 */
 	extern void GHOST_BeginIME (
-		GHOST_WindowHandle windowhandle , int32_t x , int32_t y , int32_t w , int32_t h , bool complete );
+		GHOST_HWND windowhandle , int32_t x , int32_t y , int32_t w , int32_t h , bool complete );
 	/**
 	 * Disable the IME attached to the given window, i.e. prohibits any user-input
 	 * events from being dispatched to the IME.
 	 * \param windowhandle: The window handle of the caller.
 	 */
-	extern void GHOST_EndIME ( GHOST_WindowHandle windowhandle );
+	extern void GHOST_EndIME ( GHOST_HWND windowhandle );
 
 #ifdef WITH_XR_OPENXR
 
@@ -989,11 +989,11 @@ extern "C" {
 	 * \param create_info: Options for creating the XR-context, e.g. debug-flags and ordered array of
 	 *                     graphics bindings to try enabling.
 	 */
-	GHOST_XrContextHandle GHOST_XrContextCreate ( const GHOST_XrContextCreateInfo *create_info );
+	GHOST_HXRCONTEXT GHOST_XrContextCreate ( const GHOST_XrContextCreateInfo *create_info );
 	/**
 	 * Free a XR-context involving OpenXR runtime link destruction and freeing of all internal data.
 	 */
-	void GHOST_XrContextDestroy ( GHOST_XrContextHandle xr_context );
+	void GHOST_XrContextDestroy ( GHOST_HXRCONTEXT xr_context );
 
 	/**
 	 * Set callbacks for binding and unbinding a graphics context for a session. The binding callback
@@ -1003,7 +1003,7 @@ extern "C" {
 	 * \param bind_fn: Function to retrieve (possibly create) a graphics context.
 	 * \param unbind_fn: Function to release (possibly free) a graphics context.
 	 */
-	void GHOST_XrGraphicsContextBindFuncs ( GHOST_XrContextHandle xr_context ,
+	void GHOST_XrGraphicsContextBindFuncs ( GHOST_HXRCONTEXT xr_context ,
 						GHOST_XrGraphicsContextBindFn bind_fn ,
 						GHOST_XrGraphicsContextUnbindFn unbind_fn );
 
@@ -1014,7 +1014,7 @@ extern "C" {
 	 *
 	 * \param draw_view_fn: The callback to draw a single view for an XR frame.
 	 */
-	void GHOST_XrDrawViewFunc ( GHOST_XrContextHandle xr_context , GHOST_XrDrawViewFn draw_view_fn );
+	void GHOST_XrDrawViewFunc ( GHOST_HXRCONTEXT xr_context , GHOST_XrDrawViewFn draw_view_fn );
 
 	/* sessions */
 	/**
@@ -1022,32 +1022,32 @@ extern "C" {
 	 *
 	 * \param begin_info: Options for the session creation.
 	 */
-	void GHOST_XrSessionStart ( GHOST_XrContextHandle xr_context ,
+	void GHOST_XrSessionStart ( GHOST_HXRCONTEXT xr_context ,
 				    const GHOST_XrSessionBeginInfo *begin_info );
 	/**
 	 * Destruct internal session data for \a xr_context and ask the OpenXR runtime to stop a session.
 	 */
-	void GHOST_XrSessionEnd ( GHOST_XrContextHandle xr_context );
+	void GHOST_XrSessionEnd ( GHOST_HXRCONTEXT xr_context );
 	/**
 	 * Draw a single frame by calling the view drawing callback defined by #GHOST_XrDrawViewFunc() for
 	 * each view and submit it to the OpenXR runtime.
 	 *
 	 * \param customdata: Handle to some data that will get passed to the view drawing callback.
 	 */
-	void GHOST_XrSessionDrawViews ( GHOST_XrContextHandle xr_context , void *customdata );
+	void GHOST_XrSessionDrawViews ( GHOST_HXRCONTEXT xr_context , void *customdata );
 	/**
 	 * Check if a \a xr_context has a session that, according to the OpenXR definition would be
 	 * considered to be 'running'
 	 * (https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#session_running).
 	 */
-	int GHOST_XrSessionIsRunning ( const GHOST_XrContextHandle xr_context );
+	int GHOST_XrSessionIsRunning ( const GHOST_HXRCONTEXT xr_context );
 
 	/**
 	 * Check if \a xr_context has a session that requires an upside-down frame-buffer (compared to
 	 * OpenGL). If true, the render result should be flipped vertically for correct output.
 	 * \note Only to be called after session start, may otherwise result in a false negative.
 	 */
-	int GHOST_XrSessionNeedsUpsideDownDrawing ( const GHOST_XrContextHandle xr_context );
+	int GHOST_XrSessionNeedsUpsideDownDrawing ( const GHOST_HXRCONTEXT xr_context );
 
 	/* events */
 	/**
@@ -1056,23 +1056,23 @@ extern "C" {
 	 *
 	 * \returns GHOST_kSuccess if any event was handled, otherwise GHOST_kFailure.
 	 */
-	GHOST_TSuccess GHOST_XrEventsHandle ( GHOST_XrContextHandle xr_context );
+	GHOST_TSuccess GHOST_XrEventsHandle ( GHOST_HXRCONTEXT xr_context );
 
 	/* actions */
 	/**
 	 * Create an OpenXR action set for input/output.
 	 */
-	int GHOST_XrCreateActionSet ( GHOST_XrContextHandle xr_context , const GHOST_XrActionSetInfo *info );
+	int GHOST_XrCreateActionSet ( GHOST_HXRCONTEXT xr_context , const GHOST_XrActionSetInfo *info );
 
 	/**
 	 * Destroy a previously created OpenXR action set.
 	 */
-	void GHOST_XrDestroyActionSet ( GHOST_XrContextHandle xr_context , const char *action_set_name );
+	void GHOST_XrDestroyActionSet ( GHOST_HXRCONTEXT xr_context , const char *action_set_name );
 
 	/**
 	 * Create OpenXR input/output actions.
 	 */
-	int GHOST_XrCreateActions ( GHOST_XrContextHandle xr_context ,
+	int GHOST_XrCreateActions ( GHOST_HXRCONTEXT xr_context ,
 				    const char *action_set_name ,
 				    uint32_t count ,
 				    const GHOST_XrActionInfo *infos );
@@ -1080,7 +1080,7 @@ extern "C" {
 	/**
 	 * Destroy previously created OpenXR actions.
 	 */
-	void GHOST_XrDestroyActions ( GHOST_XrContextHandle xr_context ,
+	void GHOST_XrDestroyActions ( GHOST_HXRCONTEXT xr_context ,
 				      const char *action_set_name ,
 				      uint32_t count ,
 				      const char *const *action_names );
@@ -1088,7 +1088,7 @@ extern "C" {
 	/**
 	 * Create input/output path bindings for OpenXR actions.
 	 */
-	int GHOST_XrCreateActionBindings ( GHOST_XrContextHandle xr_context ,
+	int GHOST_XrCreateActionBindings ( GHOST_HXRCONTEXT xr_context ,
 					   const char *action_set_name ,
 					   uint32_t count ,
 					   const GHOST_XrActionProfileInfo *infos );
@@ -1096,7 +1096,7 @@ extern "C" {
 	/**
 	 * Destroy previously created bindings for OpenXR actions.
 	 */
-	void GHOST_XrDestroyActionBindings ( GHOST_XrContextHandle xr_context ,
+	void GHOST_XrDestroyActionBindings ( GHOST_HXRCONTEXT xr_context ,
 					     const char *action_set_name ,
 					     uint32_t count ,
 					     const char *const *action_names ,
@@ -1105,7 +1105,7 @@ extern "C" {
 	/**
 	 * Attach all created action sets to the current OpenXR session.
 	 */
-	int GHOST_XrAttachActionSets ( GHOST_XrContextHandle xr_context );
+	int GHOST_XrAttachActionSets ( GHOST_HXRCONTEXT xr_context );
 
 	/**
 	 * Update button/tracking states for OpenXR actions.
@@ -1113,12 +1113,12 @@ extern "C" {
 	 * \param action_set_name: The name of the action set to sync. If NULL, all action sets
 	 * attached to the session will be synced.
 	 */
-	int GHOST_XrSyncActions ( GHOST_XrContextHandle xr_context , const char *action_set_name );
+	int GHOST_XrSyncActions ( GHOST_HXRCONTEXT xr_context , const char *action_set_name );
 
 	/**
 	 * Apply an OpenXR haptic output action.
 	 */
-	int GHOST_XrApplyHapticAction ( GHOST_XrContextHandle xr_context ,
+	int GHOST_XrApplyHapticAction ( GHOST_HXRCONTEXT xr_context ,
 					const char *action_set_name ,
 					const char *action_name ,
 					const char *subaction_path ,
@@ -1129,7 +1129,7 @@ extern "C" {
 	/**
 	 * Stop a previously applied OpenXR haptic output action.
 	 */
-	void GHOST_XrStopHapticAction ( GHOST_XrContextHandle xr_context ,
+	void GHOST_XrStopHapticAction ( GHOST_HXRCONTEXT xr_context ,
 					const char *action_set_name ,
 					const char *action_name ,
 					const char *subaction_path );
@@ -1137,25 +1137,25 @@ extern "C" {
 	/**
 	 * Get action set custom data (owned by Blender, not GHOST).
 	 */
-	void *GHOST_XrGetActionSetCustomdata ( GHOST_XrContextHandle xr_context ,
+	void *GHOST_XrGetActionSetCustomdata ( GHOST_HXRCONTEXT xr_context ,
 					       const char *action_set_name );
 
 	/**
 	 * Get action custom data (owned by Blender, not GHOST).
 	 */
-	void *GHOST_XrGetActionCustomdata ( GHOST_XrContextHandle xr_context ,
+	void *GHOST_XrGetActionCustomdata ( GHOST_HXRCONTEXT xr_context ,
 					    const char *action_set_name ,
 					    const char *action_name );
 
 	/**
 	 * Get the number of actions in an action set.
 	 */
-	unsigned int GHOST_XrGetActionCount ( GHOST_XrContextHandle xr_context , const char *action_set_name );
+	unsigned int GHOST_XrGetActionCount ( GHOST_HXRCONTEXT xr_context , const char *action_set_name );
 
 	/**
 	 * Get custom data for all actions in an action set.
 	 */
-	void GHOST_XrGetActionCustomdataArray ( GHOST_XrContextHandle xr_context ,
+	void GHOST_XrGetActionCustomdataArray ( GHOST_HXRCONTEXT xr_context ,
 						const char *action_set_name ,
 						void **r_customdata_array );
 
@@ -1163,23 +1163,23 @@ extern "C" {
 	/**
 	 * Load the OpenXR controller model.
 	 */
-	int GHOST_XrLoadControllerModel ( GHOST_XrContextHandle xr_context , const char *subaction_path );
+	int GHOST_XrLoadControllerModel ( GHOST_HXRCONTEXT xr_context , const char *subaction_path );
 
 	/**
 	 * Unload the OpenXR controller model.
 	 */
-	void GHOST_XrUnloadControllerModel ( GHOST_XrContextHandle xr_context , const char *subaction_path );
+	void GHOST_XrUnloadControllerModel ( GHOST_HXRCONTEXT xr_context , const char *subaction_path );
 
 	/**
 	 * Update component transforms for the OpenXR controller model.
 	 */
-	int GHOST_XrUpdateControllerModelComponents ( GHOST_XrContextHandle xr_context ,
+	int GHOST_XrUpdateControllerModelComponents ( GHOST_HXRCONTEXT xr_context ,
 						      const char *subaction_path );
 
 	/**
 	 * Get vertex data for the OpenXR controller model.
 	 */
-	int GHOST_XrGetControllerModelData ( GHOST_XrContextHandle xr_context ,
+	int GHOST_XrGetControllerModelData ( GHOST_HXRCONTEXT xr_context ,
 					     const char *subaction_path ,
 					     GHOST_XrControllerModelData *r_data );
 
@@ -1190,7 +1190,7 @@ extern "C" {
 	/**
 	 * Return VULKAN handles for the given context.
 	 */
-	void GHOST_GetVulkanHandles ( GHOST_ContextHandle context ,
+	void GHOST_GetVulkanHandles ( GHOST_HCONTEXT context ,
 				      void *r_instance ,
 				      void *r_physical_device ,
 				      void *r_device ,
@@ -1199,7 +1199,7 @@ extern "C" {
 	/**
 	 * Return VULKAN back-buffer resources handles for the given window.
 	 */
-	void GHOST_GetVulkanBackbuffer ( GHOST_WindowHandle windowhandle ,
+	void GHOST_GetVulkanBackbuffer ( GHOST_HWND windowhandle ,
 					 void *image ,
 					 void *framebuffer ,
 					 void *command_buffer ,

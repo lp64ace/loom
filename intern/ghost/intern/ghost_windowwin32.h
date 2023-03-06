@@ -211,12 +211,6 @@ public:
         void loadCursor ( bool visible , GHOST_TStandardCursor cursorShape ) const;
 
         /**
-         * Query whether given tablet API should be used.
-         * \param api: Tablet API to test.
-         */
-        bool usingTabletAPI ( GHOST_TTabletAPI api ) const;
-
-        /**
          * Translate WM_POINTER events into GHOST_PointerInfoWin32 structs.
          * \param outPointerInfo: Storage to return resulting GHOST_PointerInfoWin32 structs.
          * \param wParam: WPARAM of the event.
@@ -231,24 +225,6 @@ public:
          * Resets pointer pen tablet state.
          */
         void resetPointerPenInfo ( );
-
-        /**
-         * Loads Wintab context for the window.
-         * \param enable: True if Wintab should be enabled after loading. Wintab should not be enabled if
-         * the window is minimized.
-         */
-        void loadWintab ( bool enable );
-
-        /**
-         * Closes Wintab for the window.
-         */
-        void closeWintab ( );
-
-        /**
-         * Get the most recent Windows Pointer tablet data.
-         * \return Most recent pointer tablet data.
-         */
-        GHOST_TabletData getTabletData ( );
 
         GHOST_TSuccess beginFullScreen ( ) const {
                 return GHOST_kFailure;

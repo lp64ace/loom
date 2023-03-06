@@ -15,9 +15,8 @@ public:
         GHOST_EventButton ( uint64_t time ,
                             GHOST_TEventType type ,
                             GHOST_IWindow *window ,
-                            GHOST_TButton button ,
-                            const GHOST_TabletData &tablet )
-                : GHOST_Event ( time , type , window ) , m_buttonEventData ( { button, tablet } ) {
+                            GHOST_TButton button )
+                : GHOST_Event ( time , type , window ) , m_buttonEventData ( { button } ) {
                 m_data = &m_buttonEventData;
         }
 protected:

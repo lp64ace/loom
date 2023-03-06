@@ -715,24 +715,8 @@ GHOST_EventButton *GHOST_SystemWin32::processButtonEvent ( GHOST_TEventType type
 							   GHOST_TButton mask ) {
 	GHOST_SystemWin32 *system = ( GHOST_SystemWin32 * ) getSystem ( );
 
-	GHOST_TabletData td = window->getTabletData ( );
-
-	/* Move mouse to button event position. */
-	if ( window->getTabletData ( ).Active != GHOST_kTabletModeNone ) {
-		/* Tablet should be handling in between mouse moves, only move to event position. */
-		DWORD msgPos = ::GetMessagePos ( );
-		int msgPosX = GET_X_LPARAM ( msgPos );
-		int msgPosY = GET_Y_LPARAM ( msgPos );
-		system->pushEvent ( new GHOST_EventCursor (
-			::GetMessageTime ( ) , GHOST_kEventCursorMove , window , msgPosX , msgPosY , td ) );
-
-		if ( type == GHOST_kEventButtonDown ) {
-		} else if ( type == GHOST_kEventButtonUp ) {
-		}
-	}
-
 	window->updateMouseCapture ( type == GHOST_kEventButtonDown ? MousePressed : MouseReleased );
-	return new GHOST_EventButton ( system->getMilliSeconds ( ) , type , window , mask , td );
+	return new GHOST_EventButton ( system->getMilliSeconds ( ) , type , window , mask );
 }
 
 void GHOST_SystemWin32::processWintabEvent ( GHOST_WindowWin32 *window ) {
@@ -740,12 +724,6 @@ void GHOST_SystemWin32::processWintabEvent ( GHOST_WindowWin32 *window ) {
 }
 
 void GHOST_SystemWin32::processPointerEvent ( unsigned int type , GHOST_WindowWin32 *window , WPARAM wParam , LPARAM lParam , bool &eventHandled ) {
-	/* Pointer events might fire when changing windows for a device which is set to use Wintab,
-	 * even when Wintab is left enabled but set to the bottom of Wintab overlap order. */
-	if ( !window->usingTabletAPI ( GHOST_kTabletWinPointer ) ) {
-		return;
-	}
-
 	GHOST_SystemWin32 *system = ( GHOST_SystemWin32 * ) getSystem ( );
 	std::vector<GHOST_PointerInfoWin32> pointerInfo;
 
@@ -762,8 +740,7 @@ void GHOST_SystemWin32::processPointerEvent ( unsigned int type , GHOST_WindowWi
 									    GHOST_kEventCursorMove ,
 									    window ,
 									    pointerInfo [ i ].pixelLocation.x ,
-									    pointerInfo [ i ].pixelLocation.y ,
-									    pointerInfo [ i ].tabletData ) );
+									    pointerInfo [ i ].pixelLocation.y ) );
 			}
 
 			/* Leave event unhandled so that system cursor is moved. */
@@ -776,13 +753,11 @@ void GHOST_SystemWin32::processPointerEvent ( unsigned int type , GHOST_WindowWi
 								    GHOST_kEventCursorMove ,
 								    window ,
 								    pointerInfo [ 0 ].pixelLocation.x ,
-								    pointerInfo [ 0 ].pixelLocation.y ,
-								    pointerInfo [ 0 ].tabletData ) );
+								    pointerInfo [ 0 ].pixelLocation.y ) );
 			system->pushEvent ( new GHOST_EventButton ( pointerInfo [ 0 ].time ,
 								    GHOST_kEventButtonDown ,
 								    window ,
-								    pointerInfo [ 0 ].buttonMask ,
-								    pointerInfo [ 0 ].tabletData ) );
+								    pointerInfo [ 0 ].buttonMask ) );
 			window->updateMouseCapture ( MousePressed );
 
 			/* Mark event handled so that mouse button events are not generated. */
@@ -794,8 +769,7 @@ void GHOST_SystemWin32::processPointerEvent ( unsigned int type , GHOST_WindowWi
 			system->pushEvent ( new GHOST_EventButton ( pointerInfo [ 0 ].time ,
 								    GHOST_kEventButtonUp ,
 								    window ,
-								    pointerInfo [ 0 ].buttonMask ,
-								    pointerInfo [ 0 ].tabletData ) );
+								    pointerInfo [ 0 ].buttonMask ) );
 			window->updateMouseCapture ( MouseReleased );
 
 			/* Mark event handled so that mouse button events are not generated. */
@@ -812,11 +786,6 @@ void GHOST_SystemWin32::processPointerEvent ( unsigned int type , GHOST_WindowWi
 GHOST_EventCursor *GHOST_SystemWin32::processCursorEvent ( GHOST_WindowWin32 *window ,
 							   const int32_t screen_co [ 2 ] ) {
 	GHOST_SystemWin32 *system = ( GHOST_SystemWin32 * ) getSystem ( );
-
-	if ( window->getTabletData ( ).Active != GHOST_kTabletModeNone ) {
-		/* While pen devices are in range, cursor movement is handled by tablet input processing. */
-		return NULL;
-	}
 
 	int32_t x_screen = screen_co [ 0 ] , y_screen = screen_co [ 1 ];
 	if ( window->getCursorGrabModeIsWarp ( ) ) {
@@ -903,8 +872,7 @@ GHOST_EventCursor *GHOST_SystemWin32::processCursorEvent ( GHOST_WindowWin32 *wi
 				       GHOST_kEventCursorMove ,
 				       window ,
 				       x_screen ,
-				       y_screen ,
-				       GHOST_TABLET_DATA_NONE );
+				       y_screen );
 }
 
 void GHOST_SystemWin32::processWheelEvent ( GHOST_WindowWin32 *window , WPARAM wParam , LPARAM lParam ) {
@@ -1367,12 +1335,9 @@ LRESULT WINAPI GHOST_SystemWin32::s_wndProc ( HWND hwnd , UINT msg , WPARAM wPar
 				}
 				case WM_MOUSELEAVE: {
 					window->m_mousePresent = false;
-					if ( window->getTabletData ( ).Active == GHOST_kTabletModeNone ) {
-						/* FIXME: document why the cursor motion event on mouse leave is needed. */
-						int32_t screen_co [ 2 ] = { 0, 0 };
-						system->getCursorPosition ( screen_co [ 0 ] , screen_co [ 1 ] );
-						event = processCursorEvent ( window , screen_co );
-					}
+					int32_t screen_co [ 2 ] = { 0, 0 };
+					system->getCursorPosition ( screen_co [ 0 ] , screen_co [ 1 ] );
+					event = processCursorEvent ( window , screen_co );
 					break;
 				}
 				case WM_NCMOUSEMOVE: {
@@ -1389,9 +1354,6 @@ LRESULT WINAPI GHOST_SystemWin32::s_wndProc ( HWND hwnd , UINT msg , WPARAM wPar
 					 */
 					break;
 				}
-						 /* ========================
-						  * Window events, processed
-						  * ======================== */
 				case WM_CLOSE: {
 					/* The WM_CLOSE message is sent as a signal that a window
 					 * or an application should terminate. Restore if minimized. */

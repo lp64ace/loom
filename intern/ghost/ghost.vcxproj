@@ -39,6 +39,7 @@
     <ClInclude Include="intern\ghost_displaymanager.h" />
     <ClInclude Include="intern\ghost_displaymanagernull.h" />
     <ClInclude Include="intern\ghost_displaymanagerwin32.h" />
+    <ClInclude Include="intern\ghost_droptargetwin32.h" />
     <ClInclude Include="intern\ghost_event.h" />
     <ClInclude Include="intern\ghost_eventbutton.h" />
     <ClInclude Include="intern\ghost_eventcursor.h" />
@@ -69,22 +70,27 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="intern\ghost_buttons.cpp" />
+    <ClCompile Include="intern\ghost_c-api.cpp" />
     <ClCompile Include="intern\ghost_context.cpp" />
     <ClCompile Include="intern\ghost_contextnone.cpp" />
     <ClCompile Include="intern\ghost_contextwgl.cpp" />
     <ClCompile Include="intern\ghost_callbackeventconsumer.cpp" />
     <ClCompile Include="intern\ghost_displaymanager.cpp" />
     <ClCompile Include="intern\ghost_displaymanagerwin32.cpp" />
+    <ClCompile Include="intern\ghost_droptargetwin32.cpp" />
     <ClCompile Include="intern\ghost_eventmanager.cpp" />
     <ClCompile Include="intern\ghost_eventprinter.cpp" />
     <ClCompile Include="intern\ghost_isystem.cpp" />
+    <ClCompile Include="intern\ghost_modifierkeys.cpp" />
     <ClCompile Include="intern\ghost_rect.cpp" />
+    <ClCompile Include="intern\ghost_system.cpp" />
     <ClCompile Include="intern\ghost_systempaths.cpp" />
     <ClCompile Include="intern\ghost_systemwin32.cpp" />
     <ClCompile Include="intern\ghost_timertask.cpp" />
     <ClCompile Include="intern\ghost_trackpadwin32.cpp" />
     <ClCompile Include="intern\ghost_window.cpp" />
     <ClCompile Include="intern\ghost_windowmanager.cpp" />
+    <ClCompile Include="intern\ghost_windowwin32.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -181,7 +187,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
@@ -207,7 +213,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
@@ -229,7 +235,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
@@ -255,7 +261,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
+      <AdditionalDependencies>dwmapi.lib;shcore.lib;utfconv.lib;guardedalloc.lib;opengl32.lib;comctl32.lib;epoxy\lib\epoxy.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>

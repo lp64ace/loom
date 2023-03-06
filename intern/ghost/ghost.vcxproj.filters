@@ -156,6 +156,9 @@
     <ClInclude Include="intern\ghost_windowmanager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="intern\ghost_droptargetwin32.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="intern\ghost_buttons.cpp">
@@ -207,6 +210,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="intern\ghost_windowmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_c-api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_modifierkeys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_windowwin32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_droptargetwin32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

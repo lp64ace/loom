@@ -54,13 +54,6 @@ GHOST_TSuccess GHOST_DisplayManagerWin32::getDisplaySetting ( uint8_t display ,
         GHOST_TSuccess success;
         DEVMODE dm;
         if ( ::EnumDisplaySettings ( display_device.DeviceName , index , &dm ) ) {
-        #ifndef NDEBUG
-                printf ( "display { width : %d, height : %d, bpp : %d, frequency : %d }\n" ,
-                         dm.dmPelsWidth ,
-                         dm.dmPelsHeight ,
-                         dm.dmBitsPerPel ,
-                         dm.dmDisplayFrequency );
-        #endif
                 setting.xPixels = dm.dmPelsWidth;
                 setting.yPixels = dm.dmPelsHeight;
                 setting.bpp = dm.dmBitsPerPel;

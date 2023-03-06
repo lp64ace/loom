@@ -8,5 +8,5 @@ GHOST_CallbackEventConsumer::GHOST_CallbackEventConsumer ( GHOST_EventCallbackPr
 }
 
 bool GHOST_CallbackEventConsumer::processEvent ( GHOST_IEvent *event ) {
-	return this->m_eventCallback ( ( GHOST_EventHandle ) event , this->m_userData );
+	return this->m_eventCallback ( ( GHOST_HEVENT ) event , this->m_userData );
 }

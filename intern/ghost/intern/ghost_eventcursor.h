@@ -16,9 +16,8 @@ public:
                             GHOST_TEventType type ,
                             GHOST_IWindow *window ,
                             int32_t x ,
-                            int32_t y ,
-                            const GHOST_TabletData &tablet )
-                : GHOST_Event ( msec , type , window ) , m_cursorEventData ( { x, y, tablet } ) {
+                            int32_t y )
+                : GHOST_Event ( msec , type , window ) , m_cursorEventData ( { x, y } ) {
                 m_data = &m_cursorEventData;
         }
 protected:

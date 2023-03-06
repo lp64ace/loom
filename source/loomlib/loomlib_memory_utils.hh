@@ -2,8 +2,8 @@
 
 #include "guardedalloc/mem_guardedalloc.h"
 
-#include "loomlib_utildefines.h"
 #include "loomlib_assert.h"
+#include "loomlib_utildefines.h"
 
 #include <memory>
 #include <new>
@@ -11,15 +11,23 @@
 
 namespace loom {
 
-/** Under some circumstances #std::is_trivial_v<T> is false even though we know that the type is
- * actually trivial. Using that extra knowledge allows for some optimizations. */
-template<typename T> inline constexpr bool is_trivial_extended_v = std::is_trivial_v<T>;
-template<typename T> inline constexpr bool is_trivially_destructible_extended_v = is_trivial_extended_v<T> || std::is_trivially_destructible_v<T>;
-template<typename T> inline constexpr bool is_trivially_copy_constructible_extended_v = is_trivial_extended_v<T> || std::is_trivially_copy_constructible_v<T>;
-template<typename T> inline constexpr bool is_trivially_move_constructible_extended_v = is_trivial_extended_v<T> || std::is_trivially_move_constructible_v<T>;
+/** Under some circumstances #std::is_trivial_v<T> is false even though we know
+ * that the type is actually trivial. Using that extra knowledge allows for some
+ * optimizations. */
+template<typename T>
+inline constexpr bool is_trivial_extended_v = std::is_trivial_v<T>;
+template<typename T>
+inline constexpr bool is_trivially_destructible_extended_v =
+	is_trivial_extended_v<T> || std::is_trivially_destructible_v<T>;
+template<typename T>
+inline constexpr bool is_trivially_copy_constructible_extended_v =
+	is_trivial_extended_v<T> || std::is_trivially_copy_constructible_v<T>;
+template<typename T>
+inline constexpr bool is_trivially_move_constructible_extended_v =
+	is_trivial_extended_v<T> || std::is_trivially_move_constructible_v<T>;
 
-/** Call the destructor on n consecutive values. For trivially destructible types, this does
- * nothing.
+/** Call the destructor on n consecutive values. For trivially destructible
+ * types, this does nothing.
  *
  * Exception Safety: Destructors shouldn't throw exceptions.
  *
@@ -30,10 +38,12 @@ template<typename T> inline constexpr bool is_trivially_move_constructible_exten
  */
 template<typename T> void destruct_n(T *ptr, size_t n)
 {
-	static_assert(std::is_nothrow_destructible_v<T>, "This should be true for all types. Destructors are noexcept by default.");
+	static_assert(std::is_nothrow_destructible_v<T>,
+				  "This should be true for all types. Destructors are noexcept "
+				  "by default.");
 
-	/* This is not strictly necessary, because the loop below will be optimized away anyway. It
-	 * is nice to make behavior this explicitly, though. */
+	/* This is not strictly necessary, because the loop below will be optimized
+	 * away anyway. It is nice to make behavior this explicitly, though. */
 	if (is_trivially_destructible_extended_v<T>) {
 		return;
 	}
@@ -43,8 +53,8 @@ template<typename T> void destruct_n(T *ptr, size_t n)
 	}
 }
 
-/** Call the default constructor on n consecutive elements. For trivially constructible types, this
- * does nothing.
+/** Call the default constructor on n consecutive elements. For trivially
+ * constructible types, this does nothing.
  *
  * Exception Safety: Strong.
  *
@@ -55,8 +65,8 @@ template<typename T> void destruct_n(T *ptr, size_t n)
  */
 template<typename T> void default_construct_n(T *ptr, size_t n)
 {
-	/* This is not strictly necessary, because the loop below will be optimized away anyway. It
-	 * is nice to make behavior this explicitly, though. */
+	/* This is not strictly necessary, because the loop below will be optimized
+	 * away anyway. It is nice to make behavior this explicitly, though. */
 	if (std::is_trivially_constructible_v<T>) {
 		return;
 	}
@@ -127,12 +137,14 @@ template<typename T> void uninitialized_copy_n(const T *src, size_t n, T *dst)
  *  src: initialized
  *  dst: initialized
  */
-template<typename From, typename To> void uninitialized_convert_n(const From *src, size_t n, To *dst)
+template<typename From, typename To>
+void uninitialized_convert_n(const From *src, size_t n, To *dst)
 {
 	size_t current = 0;
 	try {
 		for (; current < n; current++) {
-			new (static_cast<void *>(dst + current)) To(static_cast<To>(src[current]));
+			new (static_cast<void *>(dst + current))
+				To(static_cast<To>(src[current]));
 		}
 	}
 	catch (...) {
@@ -183,8 +195,8 @@ template<typename T> void uninitialized_move_n(T *src, size_t n, T *dst)
 	}
 }
 
-/** Relocate n values from src to dst. Relocation is a move followed by destruction of the src
- * value.
+/** Relocate n values from src to dst. Relocation is a move followed by
+ * destruction of the src value.
  *
  * Exception Safety: Basic.
  *
@@ -201,8 +213,8 @@ template<typename T> void initialized_relocate_n(T *src, size_t n, T *dst)
 	destruct_n(src, n);
 }
 
-/** Relocate n values from src to dst. Relocation is a move followed by destruction of the src
- * value.
+/** Relocate n values from src to dst. Relocation is a move followed by
+ * destruction of the src value.
  *
  * Exception Safety: Basic.
  *
@@ -271,25 +283,27 @@ template<typename T> struct DestructValueAtAddress {
 	}
 };
 
-/** A destruct_ptr is like unique_ptr, but it will only call the destructor and will not free the
- * memory. This is useful when using custom allocators.
+/** A destruct_ptr is like unique_ptr, but it will only call the destructor and
+ * will not free the memory. This is useful when using custom allocators.
  */
-template<typename T> using destruct_ptr = std::unique_ptr<T, DestructValueAtAddress<T>>;
+template<typename T>
+using destruct_ptr = std::unique_ptr<T, DestructValueAtAddress<T>>;
 
-/** An `AlignedBuffer` is a byte array with at least the given size and alignment. The buffer will
- * not be initialized by the default constructor.
+/** An `AlignedBuffer` is a byte array with at least the given size and
+ * alignment. The buffer will not be initialized by the default constructor.
  */
 template<size_t Size, size_t Alignment> class AlignedBuffer {
 	struct Empty {};
 	struct alignas(Alignment) Sized {
-		/* Don't create an empty array. This causes problems with some compilers. */
+		/* Don't create an empty array. This causes problems with some
+		 * compilers. */
 		std::byte buffer_[Size > 0 ? Size : 1];
 	};
 
 	using BufferType = std::conditional_t<Size == 0, Empty, Sized>;
 	LOOM_NO_UNIQUE_ADDRESS BufferType _buffer;
 
-       public:
+   public:
 	operator void *()
 	{
 		return this;
@@ -311,15 +325,16 @@ template<size_t Size, size_t Alignment> class AlignedBuffer {
 	}
 };
 
-/** This can be used to reserve memory for C++ objects whose lifetime is different from the
- * lifetime of the object they are embedded in. It's used by containers with small buffer
- * optimization and hash table implementations.
+/** This can be used to reserve memory for C++ objects whose lifetime is
+ * different from the lifetime of the object they are embedded in. It's used by
+ * containers with small buffer optimization and hash table implementations.
  */
 template<typename T, size_t Size = 1> class TypedBuffer {
-       private:
-	LOOM_NO_UNIQUE_ADDRESS AlignedBuffer<sizeof(T) * (size_t)Size, alignof(T)> _buffer;
+   private:
+	LOOM_NO_UNIQUE_ADDRESS AlignedBuffer<sizeof(T) * (size_t)Size, alignof(T)>
+		_buffer;
 
-       public:
+   public:
 	operator T *()
 	{
 		return static_cast<T *>(_buffer.ptr());
@@ -361,19 +376,22 @@ template<typename T, size_t Size = 1> class TypedBuffer {
 	}
 };
 
-/** A dynamic stack buffer can be used instead of #alloca when wants to allocate a dynamic amount
- * of memory on the stack. Using this class has some advantages:
+/** A dynamic stack buffer can be used instead of #alloca when wants to allocate
+ * a dynamic amount of memory on the stack. Using this class has some
+ * advantages:
  *  - It falls back to heap allocation, when the size is too large.
  *  - It can be used in loops safely.
- *  - If the buffer is heap allocated, it is free automatically in the destructor.
+ *  - If the buffer is heap allocated, it is free automatically in the
+ * destructor.
  */
-template<size_t ReservedSize = 64, size_t ReservedAlignment = 64> class alignas(ReservedAlignment) DynamicStackBuffer {
-       private:
+template<size_t ReservedSize = 64, size_t ReservedAlignment = 64>
+class alignas(ReservedAlignment) DynamicStackBuffer {
+   private:
 	// Don't create an empty array. This causes problems with some compilers.
 	char _reserved_buffer[(ReservedSize > 0) ? ReservedSize : 1];
 	void *_buffer;
 
-       public:
+   public:
 	DynamicStackBuffer(const size_t size, const size_t alignment)
 	{
 		if (size <= ReservedSize && alignment <= ReservedAlignment) {
@@ -402,57 +420,67 @@ template<size_t ReservedSize = 64, size_t ReservedAlignment = 64> class alignas(
 	}
 };
 
-/** This can be used by container constructors. A parameter of this type should be used to indicate
- * that the constructor does not construct the elements.
+/** This can be used by container constructors. A parameter of this type should
+ * be used to indicate that the constructor does not construct the elements.
  */
 class NoInitialization {};
 
-/** This can be used to mark a constructor of an object that does not throw exceptions. Other
- * constructors can delegate to this constructor to make sure that the object lifetime starts.
- * With this, the destructor of the object will be called, even when the remaining constructor
- * throws.
+/** This can be used to mark a constructor of an object that does not throw
+ * exceptions. Other constructors can delegate to this constructor to make sure
+ * that the object lifetime starts. With this, the destructor of the object will
+ * be called, even when the remaining constructor throws.
  */
 class NoExceptConstructor {};
 
-/** Helper variable that checks if a pointer type can be converted into another pointer type
- * without issues. Possible issues are casting away const and casting a pointer to a child class.
- * Adding const or casting to a parent class is fine.
+/** Helper variable that checks if a pointer type can be converted into another
+ * pointer type without issues. Possible issues are casting away const and
+ * casting a pointer to a child class. Adding const or casting to a parent class
+ * is fine.
  */
-template<typename From, typename To> inline constexpr bool is_convertible_pointer_v = std::is_convertible_v<From, To> &&std::is_pointer_v<From> &&std::is_pointer_v<To>;
+template<typename From, typename To>
+inline constexpr bool is_convertible_pointer_v =
+	std::is_convertible_v<From, To> && std::is_pointer_v<From> &&
+	std::is_pointer_v<To>;
 
-/** Helper variable that checks if a Span<From> can be converted to Span<To> safely, whereby From
- * and To are pointers. Adding const and casting to a void pointer is allowed.
- * Casting up and down a class hierarchy generally is not allowed, because this might change the
- * pointer under some circumstances.
+/** Helper variable that checks if a Span<From> can be converted to Span<To>
+ * safely, whereby From and To are pointers. Adding const and casting to a void
+ * pointer is allowed. Casting up and down a class hierarchy generally is not
+ * allowed, because this might change the pointer under some circumstances.
  */
 template<typename From, typename To>
 inline constexpr bool is_span_convertible_pointer_v =
 	/* Make sure we are working with pointers. */
-	std::is_pointer_v<From> &&std::is_pointer_v<To> && (/* No casting is necessary when both types are the same. */
-							    std::is_same_v<From, To> ||
-							    /* Allow adding const to the underlying type. */
-							    std::is_same_v<const std::remove_pointer_t<From>, std::remove_pointer_t<To>> ||
-							    /* Allow casting non-const pointers to void pointers. */
-							    (!std::is_const_v<std::remove_pointer_t<From>> && std::is_same_v<To, void *>) ||
-							    /* Allow casting any pointer to const void pointers. */
-							    std::is_same_v<To, const void *>);
+	std::is_pointer_v<From> && std::is_pointer_v<To> &&
+	(/* No casting is necessary when both types are the same. */
+	 std::is_same_v<From, To> ||
+	 /* Allow adding const to the underlying type. */
+	 std::is_same_v<const std::remove_pointer_t<From>,
+					std::remove_pointer_t<To>> ||
+	 /* Allow casting non-const pointers to void pointers. */
+	 (!std::is_const_v<std::remove_pointer_t<From>> &&
+	  std::is_same_v<To, void *>) ||
+	 /* Allow casting any pointer to const void pointers. */
+	 std::is_same_v<To, const void *>);
 
-// Same as #std::is_same_v but allows for checking multiple types at the same time.
-template<typename T, typename... Args> inline constexpr bool is_same_any_v = (std::is_same_v<T, Args> || ...);
+// Same as #std::is_same_v but allows for checking multiple types at the same
+// time.
+template<typename T, typename... Args>
+inline constexpr bool is_same_any_v = (std::is_same_v<T, Args> || ...);
 
-/** Inline buffers for small-object-optimization should be disable by default. Otherwise we might
- * get large unexpected allocations on the stack.
+/** Inline buffers for small-object-optimization should be disable by default.
+ * Otherwise we might get large unexpected allocations on the stack.
  */
 inline constexpr size_t default_inline_buffer_capacity(size_t element_size)
 {
 	return (static_cast<size_t>(element_size) < 100) ? 4 : 0;
 }
 
-/** This can be used by containers to implement an exception-safe copy-assignment-operator.
- * It assumes that the container has an exception safe copy constructor and an exception-safe
- * move-assignment-operator.
+/** This can be used by containers to implement an exception-safe
+ * copy-assignment-operator. It assumes that the container has an exception safe
+ * copy constructor and an exception-safe move-assignment-operator.
  */
-template<typename Container> Container &copy_assign_container(Container &dst, const Container &src)
+template<typename Container>
+Container &copy_assign_container(Container &dst, const Container &src)
 {
 	if (&src == &dst) {
 		return dst;
@@ -463,11 +491,14 @@ template<typename Container> Container &copy_assign_container(Container &dst, co
 	return dst;
 }
 
-/** This can be used by containers to implement an exception-safe move-assignment-operator.
- * It assumes that the container has an exception-safe move-constructor and a noexcept constructor
- * tagged with the NoExceptConstructor tag.
+/** This can be used by containers to implement an exception-safe
+ * move-assignment-operator. It assumes that the container has an exception-safe
+ * move-constructor and a noexcept constructor tagged with the
+ * NoExceptConstructor tag.
  */
-template<typename Container> Container &move_assign_container(Container &dst, Container &&src) noexcept(std::is_nothrow_move_constructible_v<Container>)
+template<typename Container>
+Container &move_assign_container(Container &dst, Container &&src) noexcept(
+	std::is_nothrow_move_constructible_v<Container>)
 {
 	if (&dst == &src) {
 		return dst;

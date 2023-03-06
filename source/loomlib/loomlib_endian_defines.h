@@ -18,16 +18,17 @@
 
 /** \} */
 
-/** ENDIAN_ORDER: indicates what endianness the platform where the file was written had. */
+/** ENDIAN_ORDER: indicates what endianness the platform where the file was
+ * written had. */
 #if !defined(__BIG_ENDIAN__) && !defined(__LITTLE_ENDIAN__)
-#  error Either __BIG_ENDIAN__ or __LITTLE_ENDIAN__ must be defined.
+#	error Either __BIG_ENDIAN__ or __LITTLE_ENDIAN__ must be defined.
 #endif
 
 #define L_ENDIAN 1
 #define B_ENDIAN 0
 
 #ifdef __BIG_ENDIAN__
-#  define ENDIAN_ORDER B_ENDIAN
+#	define ENDIAN_ORDER B_ENDIAN
 #else
-#  define ENDIAN_ORDER L_ENDIAN
+#	define ENDIAN_ORDER L_ENDIAN
 #endif

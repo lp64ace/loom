@@ -3,23 +3,25 @@
 #define MM2A_M 0x5bd1e995
 
 #define MM2A_MIX(h, k) \
-  { \
-    (k) *= MM2A_M; \
-    (k) ^= (k) >> 24; \
-    (k) *= MM2A_M; \
-    (h) = ((h)*MM2A_M) ^ (k); \
-  } \
-  (void)0
+	{ \
+		(k) *= MM2A_M; \
+		(k) ^= (k) >> 24; \
+		(k) *= MM2A_M; \
+		(h) = ((h)*MM2A_M) ^ (k); \
+	} \
+	(void)0
 
 #define MM2A_MIX_FINALIZE(h) \
-  { \
-    (h) ^= (h) >> 13; \
-    (h) *= MM2A_M; \
-    (h) ^= (h) >> 15; \
-  } \
-  (void)0
+	{ \
+		(h) ^= (h) >> 13; \
+		(h) *= MM2A_M; \
+		(h) ^= (h) >> 15; \
+	} \
+	(void)0
 
-static void mm2a_mix_tail(HashMurMur2A *mm2, const unsigned char **data, size_t *len)
+static void mm2a_mix_tail(HashMurMur2A *mm2,
+						  const unsigned char **data,
+						  size_t *len)
 {
 	while (*len && ((*len < 4) || mm2->count)) {
 		mm2->tail |= (uint32_t)(**data) << (mm2->count * 8);
@@ -97,7 +99,8 @@ uint32_t GLU_hash_mm2(const unsigned char *data, size_t len, uint32_t seed)
 			h *= MM2A_M;
 	}
 
-	/* Do a few final mixes of the hash to ensure the last few bytes are well-incorporated. */
+	/* Do a few final mixes of the hash to ensure the last few bytes are
+	 * well-incorporated. */
 	MM2A_MIX_FINALIZE(h);
 
 	return h;

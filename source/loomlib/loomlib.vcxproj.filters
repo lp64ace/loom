@@ -113,5 +113,11 @@
     <ClInclude Include="loomlib_version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="loomlib_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="loomlib_math_base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

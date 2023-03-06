@@ -10,20 +10,20 @@
  * modification, are permitted provided that the following conditions are met:
  * 1. Redistributions of source code must retain the above copyright notice(s),
  *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice(s),
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ * notice(s), this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
- * EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /** \file
@@ -37,7 +37,7 @@
 
 #define NOGDI
 #ifndef NOMINMAX
-#  define NOMINMAX
+#	define NOMINMAX
 #endif
 #define WIN32_LEAN_AND_MEAN
 
@@ -45,91 +45,94 @@
 #include <windows.h>
 
 #if defined(__clang__)
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wincompatible-pointer-types"
+#	pragma GCC diagnostic push
+#	pragma GCC diagnostic ignored "-Wincompatible-pointer-types"
 #endif
 
-/* TODO(sergey): On x64 platform both read and write of a variable aligned to its type size is
- * atomic, so in theory it is possible to avoid memory barrier and gain performance. The downside
- * of that would be that it will impose requirement to value which is being operated on. */
+/* TODO(sergey): On x64 platform both read and write of a variable aligned to
+ * its type size is atomic, so in theory it is possible to avoid memory barrier
+ * and gain performance. The downside of that would be that it will impose
+ * requirement to value which is being operated on. */
 #define __atomic_impl_load_generic(v) (MemoryBarrier(), *(v))
 #define __atomic_impl_store_generic(p, v) \
-  do { \
-    *(p) = (v); \
-    MemoryBarrier(); \
-  } while (0)
+	do { \
+		*(p) = (v); \
+		MemoryBarrier(); \
+	} while (0)
 
 /* 64-bit operations. */
 /* Unsigned */
 ATOMIC_INLINE uint64_t atomic_add_and_fetch_uint64(uint64_t *p, uint64_t x)
 {
-  return InterlockedExchangeAdd64((int64_t *)p, (int64_t)x) + x;
+	return InterlockedExchangeAdd64((int64_t *)p, (int64_t)x) + x;
 }
 
 ATOMIC_INLINE uint64_t atomic_sub_and_fetch_uint64(uint64_t *p, uint64_t x)
 {
-  return InterlockedExchangeAdd64((int64_t *)p, -((int64_t)x)) - x;
+	return InterlockedExchangeAdd64((int64_t *)p, -((int64_t)x)) - x;
 }
 
-ATOMIC_INLINE uint64_t atomic_cas_uint64(uint64_t *v, uint64_t old, uint64_t _new)
+ATOMIC_INLINE uint64_t atomic_cas_uint64(uint64_t *v,
+										 uint64_t old,
+										 uint64_t _new)
 {
-  return InterlockedCompareExchange64((int64_t *)v, _new, old);
+	return InterlockedCompareExchange64((int64_t *)v, _new, old);
 }
 
 ATOMIC_INLINE uint64_t atomic_load_uint64(const uint64_t *v)
 {
-  return __atomic_impl_load_generic(v);
+	return __atomic_impl_load_generic(v);
 }
 
 ATOMIC_INLINE void atomic_store_uint64(uint64_t *p, uint64_t v)
 {
-  __atomic_impl_store_generic(p, v);
+	__atomic_impl_store_generic(p, v);
 }
 
 ATOMIC_INLINE uint64_t atomic_fetch_and_add_uint64(uint64_t *p, uint64_t x)
 {
-  return InterlockedExchangeAdd64((int64_t *)p, (int64_t)x);
+	return InterlockedExchangeAdd64((int64_t *)p, (int64_t)x);
 }
 
 ATOMIC_INLINE uint64_t atomic_fetch_and_sub_uint64(uint64_t *p, uint64_t x)
 {
-  return InterlockedExchangeAdd64((int64_t *)p, -((int64_t)x));
+	return InterlockedExchangeAdd64((int64_t *)p, -((int64_t)x));
 }
 
 /* Signed */
 ATOMIC_INLINE int64_t atomic_add_and_fetch_int64(int64_t *p, int64_t x)
 {
-  return InterlockedExchangeAdd64(p, x) + x;
+	return InterlockedExchangeAdd64(p, x) + x;
 }
 
 ATOMIC_INLINE int64_t atomic_sub_and_fetch_int64(int64_t *p, int64_t x)
 {
-  return InterlockedExchangeAdd64(p, -x) - x;
+	return InterlockedExchangeAdd64(p, -x) - x;
 }
 
 ATOMIC_INLINE int64_t atomic_cas_int64(int64_t *v, int64_t old, int64_t _new)
 {
-  return InterlockedCompareExchange64(v, _new, old);
+	return InterlockedCompareExchange64(v, _new, old);
 }
 
 ATOMIC_INLINE int64_t atomic_load_int64(const int64_t *v)
 {
-  return __atomic_impl_load_generic(v);
+	return __atomic_impl_load_generic(v);
 }
 
 ATOMIC_INLINE void atomic_store_int64(int64_t *p, int64_t v)
 {
-  __atomic_impl_store_generic(p, v);
+	__atomic_impl_store_generic(p, v);
 }
 
 ATOMIC_INLINE int64_t atomic_fetch_and_add_int64(int64_t *p, int64_t x)
 {
-  return InterlockedExchangeAdd64(p, x);
+	return InterlockedExchangeAdd64(p, x);
 }
 
 ATOMIC_INLINE int64_t atomic_fetch_and_sub_int64(int64_t *p, int64_t x)
 {
-  return InterlockedExchangeAdd64(p, -x);
+	return InterlockedExchangeAdd64(p, -x);
 }
 
 /******************************************************************************/
@@ -137,83 +140,85 @@ ATOMIC_INLINE int64_t atomic_fetch_and_sub_int64(int64_t *p, int64_t x)
 /* Unsigned */
 ATOMIC_INLINE uint32_t atomic_add_and_fetch_uint32(uint32_t *p, uint32_t x)
 {
-  return InterlockedExchangeAdd(p, x) + x;
+	return InterlockedExchangeAdd(p, x) + x;
 }
 
 ATOMIC_INLINE uint32_t atomic_sub_and_fetch_uint32(uint32_t *p, uint32_t x)
 {
-  return InterlockedExchangeAdd(p, -((int32_t)x)) - x;
+	return InterlockedExchangeAdd(p, -((int32_t)x)) - x;
 }
 
-ATOMIC_INLINE uint32_t atomic_cas_uint32(uint32_t *v, uint32_t old, uint32_t _new)
+ATOMIC_INLINE uint32_t atomic_cas_uint32(uint32_t *v,
+										 uint32_t old,
+										 uint32_t _new)
 {
-  return InterlockedCompareExchange((long *)v, _new, old);
+	return InterlockedCompareExchange((long *)v, _new, old);
 }
 
 ATOMIC_INLINE uint32_t atomic_load_uint32(const uint32_t *v)
 {
-  return __atomic_impl_load_generic(v);
+	return __atomic_impl_load_generic(v);
 }
 
 ATOMIC_INLINE void atomic_store_uint32(uint32_t *p, uint32_t v)
 {
-  __atomic_impl_store_generic(p, v);
+	__atomic_impl_store_generic(p, v);
 }
 
 ATOMIC_INLINE uint32_t atomic_fetch_and_add_uint32(uint32_t *p, uint32_t x)
 {
-  return InterlockedExchangeAdd(p, x);
+	return InterlockedExchangeAdd(p, x);
 }
 
 ATOMIC_INLINE uint32_t atomic_fetch_and_or_uint32(uint32_t *p, uint32_t x)
 {
-  return InterlockedOr((long *)p, x);
+	return InterlockedOr((long *)p, x);
 }
 
 ATOMIC_INLINE uint32_t atomic_fetch_and_and_uint32(uint32_t *p, uint32_t x)
 {
-  return InterlockedAnd((long *)p, x);
+	return InterlockedAnd((long *)p, x);
 }
 
 /* Signed */
 ATOMIC_INLINE int32_t atomic_add_and_fetch_int32(int32_t *p, int32_t x)
 {
-  return InterlockedExchangeAdd((long *)p, x) + x;
+	return InterlockedExchangeAdd((long *)p, x) + x;
 }
 
 ATOMIC_INLINE int32_t atomic_sub_and_fetch_int32(int32_t *p, int32_t x)
 {
-  return InterlockedExchangeAdd((long *)p, -x) - x;
+	return InterlockedExchangeAdd((long *)p, -x) - x;
 }
 
 ATOMIC_INLINE int32_t atomic_cas_int32(int32_t *v, int32_t old, int32_t _new)
 {
-  return InterlockedCompareExchange((long *)v, _new, old);
+	return InterlockedCompareExchange((long *)v, _new, old);
 }
 
 ATOMIC_INLINE int32_t atomic_load_int32(const int32_t *v)
 {
-  return __atomic_impl_load_generic(v);
+	return __atomic_impl_load_generic(v);
 }
 
 ATOMIC_INLINE void atomic_store_int32(int32_t *p, int32_t v)
 {
-  __atomic_impl_store_generic(p, v);
+	__atomic_impl_store_generic(p, v);
 }
 
 ATOMIC_INLINE int32_t atomic_fetch_and_add_int32(int32_t *p, int32_t x)
 {
-  return InterlockedExchangeAdd((long *)p, x);
+	return InterlockedExchangeAdd((long *)p, x);
 }
 
 ATOMIC_INLINE int32_t atomic_fetch_and_or_int32(int32_t *p, int32_t x)
 {
-  return InterlockedOr((long *)p, x);
+	return InterlockedOr((long *)p, x);
 }
 
 ATOMIC_INLINE int32_t atomic_fetch_and_and_int32(int32_t *p, int32_t x)
 {
-  return InterlockedAnd((long *)p, x);
+	return InterlockedAnd((long *)p, x);
 }
 
 /******************************************************************************/
@@ -222,12 +227,12 @@ ATOMIC_INLINE int32_t atomic_fetch_and_and_int32(int32_t *p, int32_t x)
 /* Signed */
 ATOMIC_INLINE int16_t atomic_fetch_and_or_int16(int16_t *p, int16_t x)
 {
-  return InterlockedOr16((short *)p, x);
+	return InterlockedOr16((short *)p, x);
 }
 
 ATOMIC_INLINE int16_t atomic_fetch_and_and_int16(int16_t *p, int16_t x)
 {
-  return InterlockedAnd16((short *)p, x);
+	return InterlockedAnd16((short *)p, x);
 }
 
 /******************************************************************************/
@@ -238,9 +243,9 @@ ATOMIC_INLINE int16_t atomic_fetch_and_and_int16(int16_t *p, int16_t x)
 ATOMIC_INLINE uint8_t atomic_fetch_and_and_uint8(uint8_t *p, uint8_t b)
 {
 #if (LG_SIZEOF_PTR == 8 || LG_SIZEOF_INT == 8)
-  return InterlockedAnd8((char *)p, (char)b);
+	return InterlockedAnd8((char *)p, (char)b);
 #else
-  return _InterlockedAnd8((char *)p, (char)b);
+	return _InterlockedAnd8((char *)p, (char)b);
 #endif
 }
 
@@ -248,9 +253,9 @@ ATOMIC_INLINE uint8_t atomic_fetch_and_and_uint8(uint8_t *p, uint8_t b)
 ATOMIC_INLINE uint8_t atomic_fetch_and_or_uint8(uint8_t *p, uint8_t b)
 {
 #if (LG_SIZEOF_PTR == 8 || LG_SIZEOF_INT == 8)
-  return InterlockedOr8((char *)p, (char)b);
+	return InterlockedOr8((char *)p, (char)b);
 #else
-  return _InterlockedOr8((char *)p, (char)b);
+	return _InterlockedOr8((char *)p, (char)b);
 #endif
 }
 
@@ -259,9 +264,9 @@ ATOMIC_INLINE uint8_t atomic_fetch_and_or_uint8(uint8_t *p, uint8_t b)
 ATOMIC_INLINE int8_t atomic_fetch_and_and_int8(int8_t *p, int8_t b)
 {
 #if (LG_SIZEOF_PTR == 8 || LG_SIZEOF_INT == 8)
-  return InterlockedAnd8((char *)p, (char)b);
+	return InterlockedAnd8((char *)p, (char)b);
 #else
-  return _InterlockedAnd8((char *)p, (char)b);
+	return _InterlockedAnd8((char *)p, (char)b);
 #endif
 }
 
@@ -269,9 +274,9 @@ ATOMIC_INLINE int8_t atomic_fetch_and_and_int8(int8_t *p, int8_t b)
 ATOMIC_INLINE int8_t atomic_fetch_and_or_int8(int8_t *p, int8_t b)
 {
 #if (LG_SIZEOF_PTR == 8 || LG_SIZEOF_INT == 8)
-  return InterlockedOr8((char *)p, (char)b);
+	return InterlockedOr8((char *)p, (char)b);
 #else
-  return _InterlockedOr8((char *)p, (char)b);
+	return _InterlockedOr8((char *)p, (char)b);
 #endif
 }
 
@@ -279,7 +284,7 @@ ATOMIC_INLINE int8_t atomic_fetch_and_or_int8(int8_t *p, int8_t b)
 #undef __atomic_impl_store_generic
 
 #if defined(__clang__)
-#  pragma GCC diagnostic pop
+#	pragma GCC diagnostic pop
 #endif
 
 #endif /* __ATOMIC_OPS_MSVC_H__ */

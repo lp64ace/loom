@@ -10,28 +10,28 @@ struct GHOST_Buttons {
 	/**
 	 * Constructor.
 	 */
-	GHOST_Buttons ( );
+	GHOST_Buttons();
 
-	~GHOST_Buttons ( );
+	~GHOST_Buttons();
 
 	/**
 	 * Returns the state of a single button.
 	 * \param mask: Key button to return.
 	 * \return The state of the button (pressed == true).
 	 */
-	bool get ( GHOST_TButton mask ) const;
+	bool get(GHOST_TButton mask) const;
 
 	/**
 	 * Updates the state of a single button.
 	 * \param mask: Button state to update.
 	 * \param down: The new state of the button.
 	 */
-	void set ( GHOST_TButton mask , bool down );
+	void set(GHOST_TButton mask, bool down);
 
 	/**
 	 * Sets the state of all buttons to up.
 	 */
-	void clear ( );
+	void clear();
 
 	uint8_t m_ButtonLeft : 1;
 	uint8_t m_ButtonMiddle : 1;

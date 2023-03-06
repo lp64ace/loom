@@ -43,6 +43,8 @@
     <ClInclude Include="loomlib_hash_mm2a.h" />
     <ClInclude Include="loomlib_index_range.hh" />
     <ClInclude Include="loomlib_listbase.h" />
+    <ClInclude Include="loomlib_math.h" />
+    <ClInclude Include="loomlib_math_base.h" />
     <ClInclude Include="loomlib_memory_utils.hh" />
     <ClInclude Include="loomlib_mempool.h" />
     <ClInclude Include="loomlib_span.hh" />

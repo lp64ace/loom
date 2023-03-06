@@ -2,24 +2,30 @@
 
 #include "atomic/atomic_ops.h"
 
-#include "loomlib/loomlib_utildefines.h"
-#include "loomlib/loomlib_compiler.h"
 #include "loomlib/loomlib_assert.h"
+#include "loomlib/loomlib_compiler.h"
 #include "loomlib/loomlib_mempool.h"
+#include "loomlib/loomlib_utildefines.h"
 
 #include <stdlib.h>
 #include <string.h>
 
 #if defined(__BIG_ENDIAN__) && __BIG_ENDIAN__
 /* Big Endian */
-#	define MAKE_ID(a, b, c, d) ((int)(a) << 24 | (int)(b) << 16 | (c) << 8 | (d))
+#	define MAKE_ID(a, b, c, d) \
+		((int)(a) << 24 | (int)(b) << 16 | (c) << 8 | (d))
 #	define MAKE_ID_8(a, b, c, d, e, f, g, h) \
-		((int64_t)(a) << 56 | (int64_t)(b) << 48 | (int64_t)(c) << 40 | (int64_t)(d) << 32 | (int64_t)(e) << 24 | (int64_t)(f) << 16 | (int64_t)(g) << 8 | (h))
+		((int64_t)(a) << 56 | (int64_t)(b) << 48 | (int64_t)(c) << 40 | \
+		 (int64_t)(d) << 32 | (int64_t)(e) << 24 | (int64_t)(f) << 16 | \
+		 (int64_t)(g) << 8 | (h))
 #elif defined(__LITTLE_ENDIAN__) && __LITTLE_ENDIAN__
 /* Little Endian */
-#	define MAKE_ID(a, b, c, d) ((int)(d) << 24 | (int)(c) << 16 | (b) << 8 | (a))
+#	define MAKE_ID(a, b, c, d) \
+		((int)(d) << 24 | (int)(c) << 16 | (b) << 8 | (a))
 #	define MAKE_ID_8(a, b, c, d, e, f, g, h) \
-		((int64_t)(h) << 56 | (int64_t)(g) << 48 | (int64_t)(f) << 40 | (int64_t)(e) << 32 | (int64_t)(d) << 24 | (int64_t)(c) << 16 | (int64_t)(b) << 8 | (a))
+		((int64_t)(h) << 56 | (int64_t)(g) << 48 | (int64_t)(f) << 40 | \
+		 (int64_t)(e) << 32 | (int64_t)(d) << 24 | (int64_t)(c) << 16 | \
+		 (int64_t)(b) << 8 | (a))
 #else
 #	error Unspecified endian provided
 #endif
@@ -28,7 +34,10 @@
  * So having a pointer to 2/4/8... aligned memory is enough to ensure
  * the `freeword` will never be used.
  * To be safe, use a word that's the same in both directions. */
-#define FREEWORD ((sizeof(void *) > sizeof(int32_t)) ? MAKE_ID_8('e', 'e', 'r', 'f', 'f', 'r', 'e', 'e') : MAKE_ID('e', 'f', 'f', 'e'))
+#define FREEWORD \
+	((sizeof(void *) > sizeof(int32_t)) ? \
+		 MAKE_ID_8('e', 'e', 'r', 'f', 'f', 'r', 'e', 'e') : \
+		 MAKE_ID('e', 'f', 'f', 'e'))
 
 // The 'used' word just needs to be set to something besides FREEWORD.
 #define USEDWORD MAKE_ID('u', 's', 'e', 'd')
@@ -96,7 +105,9 @@ static MemPoolChunk *mempool_chunk_alloc(MemPool *pool)
 	return MEM_mallocN(sizeof(MemPoolChunk) + (size_t)pool->csize, __func__);
 }
 
-static FreeNode *mempool_chunk_add(MemPool *pool, MemPoolChunk *mpchunk, FreeNode *last_tail)
+static FreeNode *mempool_chunk_add(MemPool *pool,
+								   MemPoolChunk *mpchunk,
+								   FreeNode *last_tail)
 {
 	const size_t esize = pool->esize;
 	FreeNode *curnode = CHUNK_DATA(mpchunk);
@@ -162,7 +173,10 @@ static void mempool_chunk_free_all(MemPoolChunk *mpchunk)
 	}
 }
 
-MemPool *GLU_mempool_create(size_t elem_size, size_t elem_num, size_t per_chunk, int flag)
+MemPool *GLU_mempool_create(size_t elem_size,
+							size_t elem_num,
+							size_t per_chunk,
+							int flag)
 {
 	MemPool *pool = NULL;
 	FreeNode *tail = NULL;
@@ -185,12 +199,15 @@ MemPool *GLU_mempool_create(size_t elem_size, size_t elem_num, size_t per_chunk,
 	pool->esize = elem_size;
 	{
 		LOOM_assert(power_of_2_max_u(per_chunk * elem_size) > CHUNK_OVERHEAD);
-		per_chunk = (power_of_2_max_u(per_chunk * elem_size) - CHUNK_OVERHEAD) / elem_size;
+		per_chunk = (power_of_2_max_u(per_chunk * elem_size) - CHUNK_OVERHEAD) /
+					elem_size;
 	}
 	pool->csize = elem_size * per_chunk;
 	{
-		size_t final_size = (size_t)MEM_SIZE_OVERHEAD + (size_t)sizeof(MemPoolChunk) + pool->csize;
-		LOOM_assert(((size_t)power_of_2_max_u(final_size) - final_size) < pool->esize);
+		size_t final_size = (size_t)MEM_SIZE_OVERHEAD +
+							(size_t)sizeof(MemPoolChunk) + pool->csize;
+		LOOM_assert(((size_t)power_of_2_max_u(final_size) - final_size) <
+					pool->esize);
 	}
 	pool->pchunk = per_chunk;
 
@@ -222,7 +239,7 @@ void *GLU_mempool_alloc(MemPool *pool)
 
 	free_pop = pool->free;
 
-	LOOM_assert ( pool->chunk_tail->next == NULL );
+	LOOM_assert(pool->chunk_tail->next == NULL);
 
 	if (pool->flag & LOOM_MEMPOOL_ALLOW_ITER) {
 		free_pop->freeword = USEDWORD;
@@ -250,7 +267,8 @@ void GLU_mempool_free(MemPool *pool, void *addr)
 		MemPoolChunk *chunk;
 		bool found = false;
 		for (chunk = pool->chunks; chunk; chunk = chunk->next) {
-			if (ARRAY_HAS_ITEM((char *)addr, (char *)CHUNK_DATA(chunk), pool->csize)) {
+			if (ARRAY_HAS_ITEM(
+					(char *)addr, (char *)CHUNK_DATA(chunk), pool->csize)) {
 				found = true;
 				break;
 			}
@@ -314,7 +332,8 @@ void *GLU_mempool_findelem(MemPool *pool, size_t index)
 		MemPoolIter iter;
 		void *elem;
 		GLU_mempool_iternew(pool, &iter);
-		for (elem = GLU_mempool_iterstep(&iter); index-- != 0; elem = GLU_mempool_iterstep(&iter)) {
+		for (elem = GLU_mempool_iterstep(&iter); index-- != 0;
+			 elem = GLU_mempool_iterstep(&iter)) {
 		}
 		return elem;
 	}
@@ -338,7 +357,8 @@ void *GLU_mempool_iterstep(MemPoolIter *iter)
 	}
 
 	const size_t esize = iter->pool->esize;
-	FreeNode *curnode = POINTER_OFFSET(CHUNK_DATA(iter->chunk), (esize * iter->index));
+	FreeNode *curnode = POINTER_OFFSET(CHUNK_DATA(iter->chunk),
+									   (esize * iter->index));
 	FreeNode *ret;
 	do {
 		ret = curnode;

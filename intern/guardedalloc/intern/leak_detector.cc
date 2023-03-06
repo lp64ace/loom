@@ -13,54 +13,63 @@ bool fail_on_memleak = false;
 bool ignore_memleak = false;
 
 class MemLeakPrinter {
-public:
-	~MemLeakPrinter ( ) {
-		if ( ignore_memleak ) {
+   public:
+	~MemLeakPrinter()
+	{
+		if (ignore_memleak) {
 			return;
 		}
 		leak_detector_has_run = true;
-		const size_t leaked_blocks = MEM_get_memory_blocks_in_use ( );
-		if ( leaked_blocks == 0 ) {
+		const size_t leaked_blocks = MEM_get_memory_blocks_in_use();
+		if (leaked_blocks == 0) {
 			return;
 		}
-		const size_t mem_in_use = MEM_get_memory_in_use ( );
-		printf ( "Error: Not freed memory blocks: %zu, total unfreed memory %f MB\n" ,
-			 leaked_blocks , double ( mem_in_use ) / 1024 / 1024 );
-		MEM_printmemlist ( );
+		const size_t mem_in_use = MEM_get_memory_in_use();
+		printf(
+			"Error: Not freed memory blocks: %zu, total unfreed memory %f MB\n",
+			leaked_blocks,
+			double(mem_in_use) / 1024 / 1024);
+		MEM_printmemlist();
 
-		if ( fail_on_memleak ) {
-			/* There are many other ways to change the exit code to failure here:
+		if (fail_on_memleak) {
+			/* There are many other ways to change the exit code to failure
+			 * here:
 			 * - Make the destructor `noexcept(false)` and throw an exception.
 			 * - Call exit(EXIT_FAILURE).
 			 * - Call terminate().
 			 */
-			abort ( );
+			abort();
 		}
 	}
 };
 
-}
+}  // namespace
 
-void MEM_init_memleak_detection ( ) {
-	/* Calling this ensures that the memory usage counters outlive the memory leak detection. */
-	memory_usage_init ( );
+void MEM_init_memleak_detection()
+{
+	/* Calling this ensures that the memory usage counters outlive the memory
+	 * leak detection. */
+	memory_usage_init();
 
 	/**
-	 * This variable is constructed when this function is first called. This should happen as soon as
-	 * possible when the program starts.
+	 * This variable is constructed when this function is first called. This
+	 * should happen as soon as possible when the program starts.
 	 *
-	 * It is destructed when the program exits. During destruction, it will print information about
-	 * leaked memory blocks. Static variables are destructed in reversed order of their
-	 * construction. Therefore, all static variables that own memory have to be constructed after
-	 * this function has been called.
+	 * It is destructed when the program exits. During destruction, it will
+	 * print information about leaked memory blocks. Static variables are
+	 * destructed in reversed order of their construction. Therefore, all static
+	 * variables that own memory have to be constructed after this function has
+	 * been called.
 	 */
 	static MemLeakPrinter printer;
 }
 
-void MEM_use_memleak_detection ( bool enabled ) {
+void MEM_use_memleak_detection(bool enabled)
+{
 	ignore_memleak = !enabled;
 }
 
-void MEM_enable_fail_on_memleak ( ) {
+void MEM_enable_fail_on_memleak()
+{
 	fail_on_memleak = true;
 }

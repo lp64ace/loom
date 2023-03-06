@@ -3,58 +3,61 @@
 #include "ghost_context.h"
 
 class GHOST_ContextNone : public GHOST_Context {
-public:
-	GHOST_ContextNone ( bool stereoVisual ) : GHOST_Context ( stereoVisual ) , m_swapInterval ( 1 ) {
+   public:
+	GHOST_ContextNone(bool stereoVisual)
+		: GHOST_Context(stereoVisual), m_swapInterval(1)
+	{
 	}
-	
+
 	/**
 	 * Dummy function
 	 * \return Always succeeds
 	 */
-	GHOST_TSuccess swapBuffers ( );
+	GHOST_TSuccess swapBuffers();
 
 	/**
 	 * Dummy function
 	 * \return Always succeeds.
 	 */
-	GHOST_TSuccess activateDrawingContext ( );
+	GHOST_TSuccess activateDrawingContext();
 
 	/**
 	 * Dummy function
 	 * \return Always succeeds.
 	 */
-	GHOST_TSuccess releaseDrawingContext ( );
+	GHOST_TSuccess releaseDrawingContext();
 
 	/**
 	 * Dummy function
 	 * \return Always succeeds.
 	 */
-	GHOST_TSuccess updateDrawingContext ( );
+	GHOST_TSuccess updateDrawingContext();
 
 	/**
 	 * Dummy function
 	 * \return Always succeeds.
 	 */
-	GHOST_TSuccess initializeDrawingContext ( );
+	GHOST_TSuccess initializeDrawingContext();
 
 	/**
 	 * Dummy function
 	 * \return Always succeeds.
 	 */
-	GHOST_TSuccess releaseNativeHandles ( );
+	GHOST_TSuccess releaseNativeHandles();
 
 	/**
 	 * Dummy function
 	 * \return Always succeeds.
 	 */
-	GHOST_TSuccess setSwapInterval ( int interval );
+	GHOST_TSuccess setSwapInterval(int interval);
 
 	/**
 	 * Dummy function
 	 * \param intervalOut: Gets whatever was set by #setSwapInterval.
 	 * \return Always succeeds.
 	 */
-	GHOST_TSuccess getSwapInterval ( int &intervalOut );
-private:
+	GHOST_TSuccess getSwapInterval(int &intervalOut);
+
+   private:
 	int m_swapInterval;
 };

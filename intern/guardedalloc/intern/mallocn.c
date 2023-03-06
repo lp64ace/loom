@@ -4,41 +4,56 @@
 
 #include "mallocn_intern.h"
 
-size_t ( *MEM_allocN_len )( const void *vmemh ) = MEM_lockfree_allocN_len;
-void ( *MEM_freeN )( void *vmemh ) = MEM_lockfree_freeN;
-void *( *MEM_dupallocN )( const void *vmemh ) = MEM_lockfree_dupallocN;
-void *( *MEM_reallocN_id )( void *vmemh , size_t len , const char *str ) = MEM_lockfree_reallocN_id;
-void *( *MEM_recallocN_id )( void *vmemh , size_t len , const char *str ) = MEM_lockfree_recallocN_id;
-void *( *MEM_callocN )( size_t len , const char *str ) = MEM_lockfree_callocN;
-void *( *MEM_calloc_arrayN )( size_t len , size_t size , const char *str ) = MEM_lockfree_calloc_arrayN;
-void *( *MEM_mallocN )( size_t len , const char *str ) = MEM_lockfree_mallocN;
-void *( *MEM_malloc_arrayN )( size_t len , size_t size , const char *str ) = MEM_lockfree_malloc_arrayN;
-void *( *MEM_mallocN_aligned )( size_t len , size_t alignment , const char *str ) = MEM_lockfree_mallocN_aligned;
-void ( *MEM_printmemlist )( void ) = MEM_lockfree_printmemlist;
-void ( *MEM_callbackmemlist )( void ( *func )( void * ) ) = MEM_lockfree_callbackmemlist;
-void ( *MEM_printmemlist_stats )( void ) = MEM_lockfree_printmemlist_stats;
-void ( *MEM_set_error_callback )( void ( *func )( const char * ) ) = MEM_lockfree_set_error_callback;
-bool ( *MEM_consistency_check )( void ) = MEM_lockfree_consistency_check;
-void ( *MEM_set_memory_debug )( void ) = MEM_lockfree_set_memory_debug;
-size_t ( *MEM_get_memory_in_use )( void ) = MEM_lockfree_get_memory_in_use;
-size_t ( *MEM_get_memory_blocks_in_use )( void ) = MEM_lockfree_get_memory_blocks_in_use;
-void ( *MEM_reset_peak_memory )( void ) = MEM_lockfree_reset_peak_memory;
-size_t ( *MEM_get_peak_memory )( void ) = MEM_lockfree_get_peak_memory;
+size_t (*MEM_allocN_len)(const void *vmemh) = MEM_lockfree_allocN_len;
+void (*MEM_freeN)(void *vmemh) = MEM_lockfree_freeN;
+void *(*MEM_dupallocN)(const void *vmemh) = MEM_lockfree_dupallocN;
+void *(*MEM_reallocN_id)(void *vmemh,
+						 size_t len,
+						 const char *str) = MEM_lockfree_reallocN_id;
+void *(*MEM_recallocN_id)(void *vmemh,
+						  size_t len,
+						  const char *str) = MEM_lockfree_recallocN_id;
+void *(*MEM_callocN)(size_t len, const char *str) = MEM_lockfree_callocN;
+void *(*MEM_calloc_arrayN)(size_t len,
+						   size_t size,
+						   const char *str) = MEM_lockfree_calloc_arrayN;
+void *(*MEM_mallocN)(size_t len, const char *str) = MEM_lockfree_mallocN;
+void *(*MEM_malloc_arrayN)(size_t len,
+						   size_t size,
+						   const char *str) = MEM_lockfree_malloc_arrayN;
+void *(*MEM_mallocN_aligned)(size_t len,
+							 size_t alignment,
+							 const char *str) = MEM_lockfree_mallocN_aligned;
+void (*MEM_printmemlist)(void) = MEM_lockfree_printmemlist;
+void (*MEM_callbackmemlist)(void (*func)(void *)) =
+	MEM_lockfree_callbackmemlist;
+void (*MEM_printmemlist_stats)(void) = MEM_lockfree_printmemlist_stats;
+void (*MEM_set_error_callback)(void (*func)(const char *)) =
+	MEM_lockfree_set_error_callback;
+bool (*MEM_consistency_check)(void) = MEM_lockfree_consistency_check;
+void (*MEM_set_memory_debug)(void) = MEM_lockfree_set_memory_debug;
+size_t (*MEM_get_memory_in_use)(void) = MEM_lockfree_get_memory_in_use;
+size_t (*MEM_get_memory_blocks_in_use)(void) =
+	MEM_lockfree_get_memory_blocks_in_use;
+void (*MEM_reset_peak_memory)(void) = MEM_lockfree_reset_peak_memory;
+size_t (*MEM_get_peak_memory)(void) = MEM_lockfree_get_peak_memory;
 
 #ifndef NDEBUG
-const char *( *MEM_name_ptr )( void *vmemh ) = MEM_lockfree_name_ptr;
-void ( *MEM_name_ptr_set )( void *vmemh , const char *str ) = MEM_lockfree_name_ptr_set;
+const char *(*MEM_name_ptr)(void *vmemh) = MEM_lockfree_name_ptr;
+void (*MEM_name_ptr_set)(void *vmemh,
+						 const char *str) = MEM_lockfree_name_ptr_set;
 #endif
 
-void *aligned_malloc ( size_t size , size_t alignment ) {
-	assert ( alignment >= ALIGNED_MALLOC_MINIMUM_ALIGNMENT );
+void *aligned_malloc(size_t size, size_t alignment)
+{
+	assert(alignment >= ALIGNED_MALLOC_MINIMUM_ALIGNMENT);
 
 #if defined(_WIN32)
-	return _aligned_malloc ( size , alignment );
+	return _aligned_malloc(size, alignment);
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__APPLE__)
 	void *result;
 
-	if ( posix_memalign ( &result , alignment , size ) ) {
+	if (posix_memalign(&result, alignment, size)) {
 		/* non-zero means allocation error
 		 * either no allocation or bad alignment value
 		 */
@@ -46,38 +61,42 @@ void *aligned_malloc ( size_t size , size_t alignment ) {
 	}
 	return result;
 #else
-	return memalign ( alignment , size );
+	return memalign(alignment, size);
 #endif
 }
 
-void aligned_free ( void *ptr ) {
+void aligned_free(void *ptr)
+{
 #if defined(_WIN32)
-	_aligned_free ( ptr );
+	_aligned_free(ptr);
 #else
-	free ( ptr );
+	free(ptr);
 #endif
 }
 
 /**
  * Perform assert checks on allocator type change.
- * 
- * Helps catching issues (in debug build) caused by an unintended allocator type change when there
- * are allocation happened. */
-static void assert_for_allocator_change ( void ) {
-	/* NOTE: Assume that there is no "sticky" internal state which would make switching allocator
-	 * type after all allocations are freed unsafe. In fact, it should be safe to change allocator
-	 * type after all blocks has been freed: some regression tests do rely on this property of
-	 * allocators. */
-	assert ( MEM_get_memory_blocks_in_use ( ) == 0 );
+ *
+ * Helps catching issues (in debug build) caused by an unintended allocator type
+ * change when there are allocation happened. */
+static void assert_for_allocator_change(void)
+{
+	/* NOTE: Assume that there is no "sticky" internal state which would make
+	 * switching allocator type after all allocations are freed unsafe. In fact,
+	 * it should be safe to change allocator type after all blocks has been
+	 * freed: some regression tests do rely on this property of allocators. */
+	assert(MEM_get_memory_blocks_in_use() == 0);
 }
 
-void MEM_use_lockfree_allocator ( void ) {
+void MEM_use_lockfree_allocator(void)
+{
 	/* NOTE: Keep in sync with static initialization of the variables. */
 
-	/* TODO(sergey): Find a way to de-duplicate the logic. Maybe by requiring an explicit call
-	 * to guarded allocator initialization at an application startup. */
+	/* TODO(sergey): Find a way to de-duplicate the logic. Maybe by requiring an
+	 * explicit call to guarded allocator initialization at an application
+	 * startup. */
 
-	assert_for_allocator_change ( );
+	assert_for_allocator_change();
 
 	MEM_allocN_len = MEM_lockfree_allocN_len;
 	MEM_freeN = MEM_lockfree_freeN;

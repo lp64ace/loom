@@ -7,17 +7,19 @@
  * Used for exception safe custom-data handling during constructor calls.
  */
 struct GHOST_C_CustomDataWrapper {
-	using FreeFn = std::function<void ( void * )>;
+	using FreeFn = std::function<void(void *)>;
 
 	void *custom_data_;
 	FreeFn free_fn_;
 
-	GHOST_C_CustomDataWrapper ( void *custom_data , FreeFn free_fn )
-		: custom_data_ ( custom_data ) , free_fn_ ( free_fn ) {
+	GHOST_C_CustomDataWrapper(void *custom_data, FreeFn free_fn)
+		: custom_data_(custom_data), free_fn_(free_fn)
+	{
 	}
-	~GHOST_C_CustomDataWrapper ( ) {
-		if ( free_fn_ != nullptr && custom_data_ != nullptr ) {
-			free_fn_ ( custom_data_ );
+	~GHOST_C_CustomDataWrapper()
+	{
+		if (free_fn_ != nullptr && custom_data_ != nullptr) {
+			free_fn_(custom_data_);
 		}
 	}
 };

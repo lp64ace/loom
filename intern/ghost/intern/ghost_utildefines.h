@@ -2,17 +2,17 @@
 
 #include "ghost_utildefines_variadic.h"
 
- /* -------------------------------------------------------------------- */
- /** \name Branch Prediction Macros
-  * \{ */
+/* -------------------------------------------------------------------- */
+/** \name Branch Prediction Macros
+ * \{ */
 
-  /* hints for branch prediction, only use in code that runs a _lot_ where */
+/* hints for branch prediction, only use in code that runs a _lot_ where */
 #ifdef __GNUC__
-#  define LIKELY(x) __builtin_expect(!!(x), 1)
-#  define UNLIKELY(x) __builtin_expect(!!(x), 0)
+#	define LIKELY(x) __builtin_expect(!!(x), 1)
+#	define UNLIKELY(x) __builtin_expect(!!(x), 0)
 #else
-#  define LIKELY(x) (x)
-#  define UNLIKELY(x) (x)
+#	define LIKELY(x) (x)
+#	define UNLIKELY(x) (x)
 #endif
 
 /** \} */
@@ -21,7 +21,7 @@
 /** \name Array Unpacking Macros
  * \{ */
 
- /* unpack vector for args */
+/* unpack vector for args */
 #define UNPACK2(a) ((a)[0]), ((a)[1])
 #define UNPACK3(a) UNPACK2(a), ((a)[2])
 #define UNPACK4(a) UNPACK3(a), ((a)[3])
@@ -36,13 +36,17 @@
 /** \name Array Macros
  * \{ */
 
- /* Assuming a static array. */
-#if defined(__GNUC__) && !defined(__cplusplus) && !defined(__clang__) && !defined(__INTEL_COMPILER)
-#  define ARRAY_SIZE(arr) \
-    ((sizeof(struct { int isnt_array : ((const void *)&(arr) == &(arr)[0]); }) * 0) + \
-     (sizeof(arr) / sizeof(*(arr))))
+/* Assuming a static array. */
+#if defined(__GNUC__) && !defined(__cplusplus) && !defined(__clang__) && \
+	!defined(__INTEL_COMPILER)
+#	define ARRAY_SIZE(arr) \
+		((sizeof(struct { \
+			  int isnt_array : ((const void *)&(arr) == &(arr)[0]); \
+		  }) * \
+		  0) + \
+		 (sizeof(arr) / sizeof(*(arr))))
 #else
-#  define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(*(arr)))
+#	define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(*(arr)))
 #endif
 
 /** \} */
@@ -51,8 +55,8 @@
 /** \name Equal to Any Element (ELEM) Macro
  * \{ */
 
- /* Manual line breaks for readability. */
- /* clang-format off */
+/* Manual line breaks for readability. */
+/* clang-format off */
 
  /* ELEM#(v, ...): is the first arg equal any others? */
  /* internal helpers. */
@@ -101,124 +105,124 @@
 #define CLAMPIS(a, b, c) ((a) < (b) ? (b) : (a) > (c) ? (c) : (a))
 
 #define CLAMP(a, b, c) \
-  { \
-    if ((a) < (b)) { \
-      (a) = (b); \
-    } \
-    else if ((a) > (c)) { \
-      (a) = (c); \
-    } \
-  } \
-  (void)0
+	{ \
+		if ((a) < (b)) { \
+			(a) = (b); \
+		} \
+		else if ((a) > (c)) { \
+			(a) = (c); \
+		} \
+	} \
+	(void)0
 
 #define CLAMP_MAX(a, c) \
-  { \
-    if ((a) > (c)) { \
-      (a) = (c); \
-    } \
-  } \
-  (void)0
+	{ \
+		if ((a) > (c)) { \
+			(a) = (c); \
+		} \
+	} \
+	(void)0
 
 #define CLAMP_MIN(a, b) \
-  { \
-    if ((a) < (b)) { \
-      (a) = (b); \
-    } \
-  } \
-  (void)0
+	{ \
+		if ((a) < (b)) { \
+			(a) = (b); \
+		} \
+	} \
+	(void)0
 
 #define CLAMP2(vec, b, c) \
-  { \
-    CLAMP((vec)[0], b, c); \
-    CLAMP((vec)[1], b, c); \
-  } \
-  (void)0
+	{ \
+		CLAMP((vec)[0], b, c); \
+		CLAMP((vec)[1], b, c); \
+	} \
+	(void)0
 
 #define CLAMP2_MIN(vec, b) \
-  { \
-    CLAMP_MIN((vec)[0], b); \
-    CLAMP_MIN((vec)[1], b); \
-  } \
-  (void)0
+	{ \
+		CLAMP_MIN((vec)[0], b); \
+		CLAMP_MIN((vec)[1], b); \
+	} \
+	(void)0
 
 #define CLAMP2_MAX(vec, b) \
-  { \
-    CLAMP_MAX((vec)[0], b); \
-    CLAMP_MAX((vec)[1], b); \
-  } \
-  (void)0
+	{ \
+		CLAMP_MAX((vec)[0], b); \
+		CLAMP_MAX((vec)[1], b); \
+	} \
+	(void)0
 
 #define CLAMP3(vec, b, c) \
-  { \
-    CLAMP((vec)[0], b, c); \
-    CLAMP((vec)[1], b, c); \
-    CLAMP((vec)[2], b, c); \
-  } \
-  (void)0
+	{ \
+		CLAMP((vec)[0], b, c); \
+		CLAMP((vec)[1], b, c); \
+		CLAMP((vec)[2], b, c); \
+	} \
+	(void)0
 
 #define CLAMP3_MIN(vec, b) \
-  { \
-    CLAMP_MIN((vec)[0], b); \
-    CLAMP_MIN((vec)[1], b); \
-    CLAMP_MIN((vec)[2], b); \
-  } \
-  (void)0
+	{ \
+		CLAMP_MIN((vec)[0], b); \
+		CLAMP_MIN((vec)[1], b); \
+		CLAMP_MIN((vec)[2], b); \
+	} \
+	(void)0
 
 #define CLAMP3_MAX(vec, b) \
-  { \
-    CLAMP_MAX((vec)[0], b); \
-    CLAMP_MAX((vec)[1], b); \
-    CLAMP_MAX((vec)[2], b); \
-  } \
-  (void)0
+	{ \
+		CLAMP_MAX((vec)[0], b); \
+		CLAMP_MAX((vec)[1], b); \
+		CLAMP_MAX((vec)[2], b); \
+	} \
+	(void)0
 
 #define CLAMP4(vec, b, c) \
-  { \
-    CLAMP((vec)[0], b, c); \
-    CLAMP((vec)[1], b, c); \
-    CLAMP((vec)[2], b, c); \
-    CLAMP((vec)[3], b, c); \
-  } \
-  (void)0
+	{ \
+		CLAMP((vec)[0], b, c); \
+		CLAMP((vec)[1], b, c); \
+		CLAMP((vec)[2], b, c); \
+		CLAMP((vec)[3], b, c); \
+	} \
+	(void)0
 
 #define CLAMP4_MIN(vec, b) \
-  { \
-    CLAMP_MIN((vec)[0], b); \
-    CLAMP_MIN((vec)[1], b); \
-    CLAMP_MIN((vec)[2], b); \
-    CLAMP_MIN((vec)[3], b); \
-  } \
-  (void)0
+	{ \
+		CLAMP_MIN((vec)[0], b); \
+		CLAMP_MIN((vec)[1], b); \
+		CLAMP_MIN((vec)[2], b); \
+		CLAMP_MIN((vec)[3], b); \
+	} \
+	(void)0
 
 #define CLAMP4_MAX(vec, b) \
-  { \
-    CLAMP_MAX((vec)[0], b); \
-    CLAMP_MAX((vec)[1], b); \
-    CLAMP_MAX((vec)[2], b); \
-    CLAMP_MAX((vec)[3], b); \
-  } \
-  (void)0
+	{ \
+		CLAMP_MAX((vec)[0], b); \
+		CLAMP_MAX((vec)[1], b); \
+		CLAMP_MAX((vec)[2], b); \
+		CLAMP_MAX((vec)[3], b); \
+	} \
+	(void)0
 
- /** \} */
+/** \} */
 
- /* -------------------------------------------------------------------- */
- /** \name String Macros
-  * \{ */
+/* -------------------------------------------------------------------- */
+/** \name String Macros
+ * \{ */
 
-  /* Macro to convert a value to string in the preprocessor:
-   * - `STRINGIFY_ARG`: gives the argument as a string
-   * - `STRINGIFY_APPEND`: appends any argument 'b' onto the string argument 'a',
-   *   used by `STRINGIFY` because some preprocessors warn about zero arguments.
-   * - `STRINGIFY`: gives the argument's value as a string. */
+/* Macro to convert a value to string in the preprocessor:
+ * - `STRINGIFY_ARG`: gives the argument as a string
+ * - `STRINGIFY_APPEND`: appends any argument 'b' onto the string argument 'a',
+ *   used by `STRINGIFY` because some preprocessors warn about zero arguments.
+ * - `STRINGIFY`: gives the argument's value as a string. */
 
 #define STRINGIFY_ARG(x) "" #x
 #define STRINGIFY_APPEND(a, b) "" a #b
 #define STRINGIFY(x) STRINGIFY_APPEND("", x)
 
-   /* generic strcmp macros */
+/* generic strcmp macros */
 #if defined(_MSC_VER)
-#  define strcasecmp _stricmp
-#  define strncasecmp _strnicmp
+#	define strcasecmp _stricmp
+#	define strncasecmp _strnicmp
 #endif
 
 #define STREQ(a, b) (strcmp(a, b) == 0)

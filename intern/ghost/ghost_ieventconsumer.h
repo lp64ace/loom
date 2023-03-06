@@ -11,11 +11,12 @@
  * \see GHOST_ISystem#addEventConsumer
  */
 class GHOST_IEventConsumer {
-public:
+   public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~GHOST_IEventConsumer ( ) {
+	virtual ~GHOST_IEventConsumer()
+	{
 	}
 
 	/**
@@ -24,9 +25,9 @@ public:
 	 * \param event: The event that can be handled or ignored.
 	 * \return Indication as to whether the event was handled.
 	 */
-	virtual bool processEvent ( GHOST_IEvent *event ) = 0;
+	virtual bool processEvent(GHOST_IEvent *event) = 0;
 
 #ifdef WITH_CXX_GUARDEDALLOC
-	MEM_CXX_CLASS_ALLOC_FUNCS ( "GHOST:GHOST_IEventConsumer" )
-	#endif
+	MEM_CXX_CLASS_ALLOC_FUNCS("GHOST:GHOST_IEventConsumer")
+#endif
 };

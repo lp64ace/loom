@@ -1,8 +1,8 @@
 #include "guardedalloc/mem_guardedalloc.h"
 
-#include "loomlib/loomlib_utildefines.h"
 #include "loomlib/loomlib_ghash.h"
 #include "loomlib/loomlib_hash_mm2a.h"
+#include "loomlib/loomlib_utildefines.h"
 
 #include <string.h>
 
@@ -20,7 +20,8 @@ unsigned int GLU_ghashutil_ptrhash(const void *key)
 
 	/* NOTE: Unlike Python `sizeof(uint)` is used instead of `sizeof(void *)`,
 	 * Otherwise casting to 'uint' ignores the upper bits on 64bit platforms. */
-	return (unsigned int)(y >> 4) | ((unsigned int)y << (sizeof(unsigned int[8]) - 4));
+	return (unsigned int)(y >> 4) |
+		   ((unsigned int)y << (sizeof(unsigned int[8]) - 4));
 }
 
 bool GLU_ghashutil_ptrcmp(const void *a, const void *b)
@@ -39,7 +40,8 @@ unsigned int GLU_ghashutil_uinthash_v4(const unsigned int key[4])
 
 unsigned int GLU_ghashutil_uinthash_v4_murmur(const unsigned int key[4])
 {
-	return GLU_hash_mm2((const unsigned char *)key, sizeof(int[4]) /* sizeof(key) */, 0);
+	return GLU_hash_mm2(
+		(const unsigned char *)key, sizeof(int[4]) /* sizeof(key) */, 0);
 }
 
 bool GLU_ghashutil_uinthash_v4_cmp(const void *a, const void *b)
@@ -90,7 +92,8 @@ bool GLU_ghashutil_intcmp(const void *a, const void *b)
 	return (a != b);
 }
 
-unsigned int GLU_ghashutil_combine_hash(unsigned int hash_a, unsigned int hash_b)
+unsigned int GLU_ghashutil_combine_hash(unsigned int hash_a,
+										unsigned int hash_b)
 {
 	return hash_a ^ (hash_b + 0x9e3779b9 + (hash_a << 6) + (hash_a >> 2));
 }
@@ -165,9 +168,11 @@ void GLU_ghashutil_pairfree(void *ptr)
 /** \name Convenience GHash Creation Functions
  * \{ */
 
-GHash *GLU_ghash_ptr_new_ex(const char *info, const unsigned int nentries_reserve)
+GHash *GLU_ghash_ptr_new_ex(const char *info,
+							const unsigned int nentries_reserve)
 {
-	return GLU_ghash_new_ex(GLU_ghashutil_ptrhash, GLU_ghashutil_ptrcmp, info, nentries_reserve);
+	return GLU_ghash_new_ex(
+		GLU_ghashutil_ptrhash, GLU_ghashutil_ptrcmp, info, nentries_reserve);
 }
 
 GHash *GLU_ghash_ptr_new(const char *info)
@@ -175,9 +180,11 @@ GHash *GLU_ghash_ptr_new(const char *info)
 	return GLU_ghash_ptr_new_ex(info, 0);
 }
 
-GHash *GLU_ghash_str_new_ex(const char *info, const unsigned int nentries_reserve)
+GHash *GLU_ghash_str_new_ex(const char *info,
+							const unsigned int nentries_reserve)
 {
-	return GLU_ghash_new_ex(GLU_ghashutil_strhash_p, GLU_ghashutil_strcmp, info, nentries_reserve);
+	return GLU_ghash_new_ex(
+		GLU_ghashutil_strhash_p, GLU_ghashutil_strcmp, info, nentries_reserve);
 }
 
 GHash *GLU_ghash_str_new(const char *info)
@@ -185,9 +192,11 @@ GHash *GLU_ghash_str_new(const char *info)
 	return GLU_ghash_str_new_ex(info, 0);
 }
 
-GHash *GLU_ghash_int_new_ex(const char *info, const unsigned int nentries_reserve)
+GHash *GLU_ghash_int_new_ex(const char *info,
+							const unsigned int nentries_reserve)
 {
-	return GLU_ghash_new_ex(GLU_ghashutil_inthash_p, GLU_ghashutil_intcmp, info, nentries_reserve);
+	return GLU_ghash_new_ex(
+		GLU_ghashutil_inthash_p, GLU_ghashutil_intcmp, info, nentries_reserve);
 }
 
 GHash *GLU_ghash_int_new(const char *info)
@@ -195,9 +204,11 @@ GHash *GLU_ghash_int_new(const char *info)
 	return GLU_ghash_int_new_ex(info, 0);
 }
 
-GHash *GLU_ghash_pair_new_ex(const char *info, const unsigned int nentries_reserve)
+GHash *GLU_ghash_pair_new_ex(const char *info,
+							 const unsigned int nentries_reserve)
 {
-	return GLU_ghash_new_ex(GLU_ghashutil_pairhash, GLU_ghashutil_paircmp, info, nentries_reserve);
+	return GLU_ghash_new_ex(
+		GLU_ghashutil_pairhash, GLU_ghashutil_paircmp, info, nentries_reserve);
 }
 
 GHash *GLU_ghash_pair_new(const char *info)
@@ -213,7 +224,8 @@ GHash *GLU_ghash_pair_new(const char *info)
 
 GSet *GLU_gset_ptr_new_ex(const char *info, const unsigned int nentries_reserve)
 {
-	return GLU_gset_new_ex(GLU_ghashutil_ptrhash, GLU_ghashutil_ptrcmp, info, nentries_reserve);
+	return GLU_gset_new_ex(
+		GLU_ghashutil_ptrhash, GLU_ghashutil_ptrcmp, info, nentries_reserve);
 }
 
 GSet *GLU_gset_ptr_new(const char *info)
@@ -223,7 +235,8 @@ GSet *GLU_gset_ptr_new(const char *info)
 
 GSet *GLU_gset_str_new_ex(const char *info, const unsigned int nentries_reserve)
 {
-	return GLU_gset_new_ex(GLU_ghashutil_strhash_p, GLU_ghashutil_strcmp, info, nentries_reserve);
+	return GLU_gset_new_ex(
+		GLU_ghashutil_strhash_p, GLU_ghashutil_strcmp, info, nentries_reserve);
 }
 
 GSet *GLU_gset_str_new(const char *info)
@@ -231,9 +244,11 @@ GSet *GLU_gset_str_new(const char *info)
 	return GLU_gset_str_new_ex(info, 0);
 }
 
-GSet *GLU_gset_pair_new_ex(const char *info, const unsigned int nentries_reserve)
+GSet *GLU_gset_pair_new_ex(const char *info,
+						   const unsigned int nentries_reserve)
 {
-	return GLU_gset_new_ex(GLU_ghashutil_pairhash, GLU_ghashutil_paircmp, info, nentries_reserve);
+	return GLU_gset_new_ex(
+		GLU_ghashutil_pairhash, GLU_ghashutil_paircmp, info, nentries_reserve);
 }
 
 GSet *GLU_gset_pair_new(const char *info)
@@ -243,7 +258,8 @@ GSet *GLU_gset_pair_new(const char *info)
 
 GSet *GLU_gset_int_new_ex(const char *info, const unsigned int nentries_reserve)
 {
-	return GLU_gset_new_ex(GLU_ghashutil_inthash_p, GLU_ghashutil_intcmp, info, nentries_reserve);
+	return GLU_gset_new_ex(
+		GLU_ghashutil_inthash_p, GLU_ghashutil_intcmp, info, nentries_reserve);
 }
 
 GSet *GLU_gset_int_new(const char *info)

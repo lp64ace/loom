@@ -5,16 +5,16 @@ extern "C" {
 #endif
 
 typedef struct Link {
-	struct Link *prev , *next;
+	struct Link *prev, *next;
 } Link;
 
 typedef struct LinkData {
-	struct Link *prev , *next;
+	struct Link *prev, *next;
 	void *data;
 } LinkData;
 
 typedef struct ListBase {
-	void *first , *last;
+	void *first, *last;
 } ListBase;
 
 #ifdef __cplusplus

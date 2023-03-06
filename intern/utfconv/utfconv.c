@@ -1,10 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0-or-later
- * Copyright 2012 Blender Foundation. All rights reserved. */
-
- /** \file
-  * \ingroup intern_utf_conv
-  */
-
 #include "utfconv.h"
 
 size_t count_utf_8_from_16 ( const wchar_t *string16 ) {
@@ -236,7 +229,6 @@ int conv_utf_8_to_16 ( const char *in8 , wchar_t *out16 , size_t size16 ) {
         return err;
 }
 
-/* UNUSED FUNCTIONS */
 #if 0
 static int is_ascii ( const char *in8 ) {
         for ( ; *in8; in8++ )

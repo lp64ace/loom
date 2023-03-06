@@ -11,8 +11,7 @@ bool GHOST_EventPrinter::processEvent ( GHOST_IEvent *event ) {
         if ( event->getType ( ) == GHOST_kEventWindowUpdate ) {
                 return false;
         }
-        std::cout << "GHOST_EventPrinter::processEvent, time: " << ( int32_t ) event->getTime ( )
-                << ", type: ";
+        std::cout << "GHOST_EventPrinter::processEvent, time: " << ( int32_t ) event->getTime ( ) << ", type: ";
         switch ( event->getType ( ) ) {
                 case GHOST_kEventUnknown:
                 std::cout << "GHOST_kEventUnknown";

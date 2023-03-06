@@ -251,7 +251,7 @@ GHOST_TSuccess GHOST_System::init ( ) {
 	m_timerManager = new GHOST_TimerManager ( );
 	m_windowManager = new GHOST_WindowManager ( );
 	m_eventManager = new GHOST_EventManager ( );
-
+	
 	if ( m_timerManager && m_windowManager && m_eventManager ) {
 		return GHOST_kSuccess;
 	}

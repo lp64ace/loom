@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ghost_c-api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghost_icontext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghost_ievent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghost_ieventconsumer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghost_isystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghost_isystempaths.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghost_itimertask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghost_iwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghost_ixrcontext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghost_path-api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghost_rect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghost_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_buttons.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_callbackeventconsumer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_context.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_contextnone.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_contextwgl.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_displaymanager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_displaymanagernull.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_displaymanagerwin32.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_event.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_eventbutton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_eventcursor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_eventdragndrop.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_eventkey.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_eventmanager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_eventprinter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_eventstring.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_eventtrackpad.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_eventwheel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_modifierkeys.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_system.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_systemheadless.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_systempaths.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_systempathswin32.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_systemwin32.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_traskbarwin32.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_timermanager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_timertask.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_trackpadwin32.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_util.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_utildefines.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_utildefines_variadic.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_window.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_windownull.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_windowwin32.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="intern\ghost_windowmanager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="intern\ghost_buttons.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_callbackeventconsumer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_context.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_contextnone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_contextwgl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_displaymanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_displaymanagerwin32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_eventmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_eventprinter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_isystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_systempaths.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_rect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_timertask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_trackpadwin32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_systemwin32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intern\ghost_windowmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
